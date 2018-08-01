@@ -11,10 +11,26 @@ package ru.pearx.kormatter
 /*
  * Created by mrAppleXZ on 04.07.18 18:11
  */
-class Formatter
+open class Formatter
 {
-    fun format(format: String, vararg args: Any?)
+    companion object
     {
+        val DEFAULT = Formatter()
 
+        private val REGEX: Regex = Regex("""%(?:(\d+)\$)?([-#+ 0,(<]+)?(\d+)?(?:\.(\d+))?(.)([A-Za-z])?""")
+        private val ARGUMENT_INDEX_GROUP = 1
+        private val FLAGS_GROUP = 2
+        private val WIDTH_GROUP = 3
+        private val PRECISION_GROUP = 4
+        private val CONVERSION_GROUP = 5
+        private val DATETIME_CONVERSION_GROUP = 6
+    }
+
+    fun format(format: String, vararg args: Any?): String
+    {
+        return REGEX.replace(format)
+        { res ->
+            ""
+        }
     }
 }
