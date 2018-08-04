@@ -17,20 +17,27 @@ open class Formatter
     {
         val DEFAULT = Formatter()
 
-        private val REGEX: Regex = Regex("""%(?:(\d+)\$)?([-#+ 0,(<]+)?(\d+)?(?:\.(\d+))?(.)([A-Za-z])?""")
-        private val ARGUMENT_INDEX_GROUP = 1
-        private val FLAGS_GROUP = 2
-        private val WIDTH_GROUP = 3
-        private val PRECISION_GROUP = 4
-        private val CONVERSION_GROUP = 5
-        private val DATETIME_CONVERSION_GROUP = 6
+        private val REGEX: Regex = Regex("""%(?:(\d+)\$)?([-#+ 0,(<]+)?(\d+)?(?:\.(\d+))?(.)((?<=t).)?""")
     }
 
     fun format(format: String, vararg args: Any?): String
     {
         return REGEX.replace(format)
         { res ->
-            ""
+            val arg_ind = res.groupValues[1]
+            val flags = res.groupValues[2]
+            val width = res.groupValues[3]
+            val precision = res.groupValues[4]
+            val conversion = res.groupValues[5] as? Char
+            val conversion_dt = res.groupValues[6] as? Char
+
+            when (conversion)
+            {
+                else ->
+                {
+                    ""
+                }
+            }
         }
     }
 }

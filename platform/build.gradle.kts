@@ -1,5 +1,5 @@
-evaluationDependsOnChildren()
 subprojects {
+    apply<BasePlugin>()
     repositories {
         mavenCentral()
     }
