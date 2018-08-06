@@ -7,7 +7,7 @@
 
 package ru.pearx.kormatter
 
+
 /*
- * Created by mrAppleXZ on 08.07.18 14:43
+ * Created by mrAppleXZ on 02.08.18.
  */
-fun String.format(vararg params: Any?) = Formatter.DEFAULT.format(this, params)

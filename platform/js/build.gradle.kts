@@ -3,7 +3,6 @@ import com.moowork.gradle.node.npm.NpmTask
 import com.moowork.gradle.node.task.NodeTask
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     id("kotlin-platform-js")
@@ -11,8 +10,15 @@ plugins {
 }
 
 val klock_version: String by project
+val atomicfu_version: String by project
 val nodejs_version: String by project
 val npm_version: String by project
+
+configure<NodeExtension> {
+    version = nodejs_version
+    npmVersion = npm_version
+    download = true
+}
 
 dependencies {
     compile(kotlin("stdlib-js"))
@@ -20,16 +26,7 @@ dependencies {
     expectedBy(project(":platform:common"))
 
     compile("com.soywiz:klock-js:$klock_version")
-}
-
-/*configure<NodeExtension> {
-    setNodeVersion(nodejs_version)
-}*/
-
-configure<NodeExtension> {
-    version = nodejs_version
-    npmVersion = npm_version
-    download = true
+    compile("org.jetbrains.kotlinx:atomicfu-js:$atomicfu_version")
 }
 
 tasks {
