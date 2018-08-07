@@ -16,8 +16,25 @@ data class FormatString(
         val flags: String,
         val width: Int?,
         val precision: Int?,
-        val prepend: Char?,
+        val prefix: Char?,
         val conversion: Char,
         val start: Int,
         val endInclusive: Int
 )
+{
+    override fun toString(): String
+    {
+        val sb = StringBuilder()
+        sb.append("%")
+        if(argumentIndex != null)
+            sb.append(argumentIndex).append("$")
+        if(width != null)
+            sb.append(width)
+        if(precision != null)
+            sb.append(".").append(precision)
+        if(prefix != null)
+            sb.append(prefix)
+        sb.append(conversion)
+        return sb.toString()
+    }
+}

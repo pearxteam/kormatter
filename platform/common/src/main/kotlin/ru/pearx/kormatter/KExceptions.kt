@@ -11,3 +11,33 @@ package ru.pearx.kormatter
 /*
  * Created by mrAppleXZ on 02.08.18.
  */
+
+open class IllegalPrecisionException : RuntimeException
+{
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}
+
+open class IllegalWidthException : RuntimeException
+{
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}
+
+open class IllegalFlagsException : RuntimeException
+{
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}
+
+open class IllegalConversionException : RuntimeException
+{
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}
+
+open class ConversionAlreadyExistsException : RuntimeException
+{
+    constructor() : super()
+    constructor(message: String?): super(message)
+}

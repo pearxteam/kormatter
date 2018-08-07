@@ -7,6 +7,10 @@
 
 package ru.pearx.kormatter.conversion
 
+import ru.pearx.kormatter.IllegalPrecisionException
+import ru.pearx.kormatter.IllegalWidthException
+import ru.pearx.kormatter.parser.FormatString
+
 
 /*
  * Created by mrAppleXZ on 04.08.18.
@@ -15,7 +19,18 @@ interface IConversion
 {
     val character: Char
 
-    val canHaveWidth: Boolean
+    val widthDependency: PartDependency
 
-    val canHavePrecision: Boolean
+    val precisionDependency: PartDependency
+
+    fun checkFlags(str: FormatString)
+
+    fun format(str: FormatString): String
+
+    fun check(str: FormatString)
+    {
+        widthDependency.checkAndThrow(str, str.width, "width") { msg -> IllegalWidthException(msg) }
+        precisionDependency.checkAndThrow(str, str.precision, "precision") { msg -> IllegalPrecisionException(msg) }
+        checkFlags(str)
+    }
 }

@@ -10,10 +10,12 @@ package ru.pearx.kormatter.test
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.Klock
 import ru.pearx.kormatter.Formatter
+import ru.pearx.kormatter.IllegalConversionException
 import ru.pearx.kormatter.format
 import kotlin.math.E
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 
 /*
@@ -61,5 +63,20 @@ class FormatterTest
                 println(Klock.currentTimeMillis() - tm)
             }
         println("Total: ${Klock.currentTimeMillis() - t}")
+    }
+
+    @Test
+    fun testWithoutFormatting()
+    {
+        assertEquals("Test", "Test".format())
+        assertEquals("Look at me, I'm a really long sentence. Trust me.", "Look at me, I'm a really long sentence. Trust me.".format("one", 1, '1'))
+    }
+
+    @Test
+    fun testIllegalConversions()
+    {
+        assertFailsWith<IllegalConversionException> { "Hello, %ы".format() }
+        assertFailsWith<IllegalConversionException> { "Tsss, %2$12p".format() }
+        assertFailsWith<IllegalConversionException> { "Tsss, %2$<12.420q".format() }
     }
 }
