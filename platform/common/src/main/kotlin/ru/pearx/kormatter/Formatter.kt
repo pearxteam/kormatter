@@ -8,10 +8,12 @@
 package ru.pearx.kormatter
 
 import kotlinx.atomicfu.AtomicBoolean
+import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import ru.pearx.kormatter.conversion.IConversion
 import ru.pearx.kormatter.conversion.PartDependency
 import ru.pearx.kormatter.conversion.SimpleConversion
+import ru.pearx.kormatter.internal.lineSeparator
 import ru.pearx.kormatter.parser.FormatStringParser
 
 /*
@@ -50,12 +52,14 @@ open class Formatter
         var textStart = 0
         for (str in FormatStringParser.parse(format, regex))
         {
-            textStart = str.endInclusive
+            to.append(format.substring(textStart, str.start))
+            textStart = str.endInclusive + 1
 
             val conversion = conversions.get(str.prefix, str.conversion)
                     ?: throw IllegalConversionException("Cannot find a conversion '${str.conversion}' with prefix '${str.prefix}'.")
             conversion.check(str)
-
+            to.append(conversion.format(str))
+            //todo width
         }
         to.append(format.substring(textStart))
 
@@ -90,7 +94,7 @@ open class Formatter
 
     fun format(format: String, vararg args: Any?): String = format(format, StringBuilder(), args).toString()
 
-    inner class ConversionContainer : Map<Char?, MutableList<IConversion>>
+    protected inner class ConversionContainer : Map<Char?, MutableList<IConversion>>
     {
         private val conversions: MutableMap<Char?, MutableList<IConversion>> = HashMap()
 

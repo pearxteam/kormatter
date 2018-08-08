@@ -7,8 +7,8 @@
 
 package ru.pearx.kormatter.parser
 
-import ru.pearx.kormatter.singleEmptyNull
-import ru.pearx.kormatter.toIntEmptyNull
+import ru.pearx.kormatter.internal.singleEmptyNull
+import ru.pearx.kormatter.internal.toIntEmptyNull
 
 
 /*

@@ -9,13 +9,12 @@ package ru.pearx.kormatter.test
 
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.Klock
-import ru.pearx.kormatter.Formatter
-import ru.pearx.kormatter.IllegalConversionException
-import ru.pearx.kormatter.format
+import ru.pearx.kormatter.*
 import kotlin.math.E
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 
 /*
@@ -70,6 +69,22 @@ class FormatterTest
     {
         assertEquals("Test", "Test".format())
         assertEquals("Look at me, I'm a really long sentence. Trust me.", "Look at me, I'm a really long sentence. Trust me.".format("one", 1, '1'))
+    }
+
+    @Test
+    fun testPercent()
+    {
+        assertEquals("Percent: %.", "Percent: %%.".format())
+        assertFailsWith<IllegalPrecisionException> { "Percent: %.2%.".format() }
+        assertFailsWith<IllegalFlagsException> { "Percent: %#%.".format() }
+    }
+
+    @Test
+    fun testNewline()
+    {
+        //todo
+        val formatted = "Some%nText%nYay".format()
+        assertTrue { arrayOf("Some\nText\nYay", "Some\rText\rYay", "Some\r\nText\r\nYay").contains(formatted) }
     }
 
     @Test
