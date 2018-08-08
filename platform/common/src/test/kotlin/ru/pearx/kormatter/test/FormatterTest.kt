@@ -75,16 +75,20 @@ class FormatterTest
     fun testPercent()
     {
         assertEquals("Percent: %.", "Percent: %%.".format())
-        assertFailsWith<IllegalPrecisionException> { "Percent: %.2%.".format() }
-        assertFailsWith<IllegalFlagsException> { "Percent: %#%.".format() }
     }
 
     @Test
     fun testNewline()
     {
-        //todo
         val formatted = "Some%nText%nYay".format()
         assertTrue { arrayOf("Some\nText\nYay", "Some\rText\rYay", "Some\r\nText\r\nYay").contains(formatted) }
+    }
+
+    @Test
+    fun testWidth()
+    {
+        assertEquals("         %", "%10%".format())
+        assertEquals("%         ", "%-10%".format())
     }
 
     @Test

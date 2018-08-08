@@ -6,11 +6,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("kotlin-platform-jvm")
     id("kotlinx-atomicfu")
+    id("jacoco")
 }
 
 val klock_version: String by project
 val atomicfu_version: String by project
 val junit_jupiter_version: String by project
+val jacoco_version: String by project
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -28,6 +30,10 @@ dependencies {
 
     compile("com.soywiz:klock:$klock_version")
     compileOnly("org.jetbrains.kotlinx:atomicfu:$atomicfu_version")
+}
+
+jacoco {
+    toolVersion = jacoco_version
 }
 
 tasks {

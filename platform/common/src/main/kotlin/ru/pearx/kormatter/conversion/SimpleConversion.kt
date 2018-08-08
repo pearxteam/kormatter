@@ -16,7 +16,6 @@ import ru.pearx.kormatter.parser.FormatString
  * Created by mrAppleXZ on 07.08.18.
  */
 class SimpleConversion(
-        override val character: Char,
         override val widthDependency: PartDependency,
         override val precisionDependency: PartDependency,
         private val replacement: String
@@ -26,9 +25,9 @@ class SimpleConversion(
 
     override fun checkFlags(str: FormatString)
     {
-        for(flag in str.flags)
+        for (flag in str.flags)
         {
-            if(flag == FLAG_LEFT_JUSTIFIED && widthDependency != PartDependency.FORBIDDEN)
+            if (flag == FLAG_LEFT_JUSTIFIED && widthDependency != PartDependency.FORBIDDEN)
                 break
             throw IllegalFlagsException("'$str' doesn't support the '$flag' flag.")
         }

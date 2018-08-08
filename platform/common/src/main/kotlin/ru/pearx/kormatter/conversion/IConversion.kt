@@ -7,6 +7,8 @@
 
 package ru.pearx.kormatter.conversion
 
+import ru.pearx.kormatter.FLAG_LEFT_JUSTIFIED
+import ru.pearx.kormatter.IllegalFlagsException
 import ru.pearx.kormatter.IllegalPrecisionException
 import ru.pearx.kormatter.IllegalWidthException
 import ru.pearx.kormatter.parser.FormatString
@@ -17,13 +19,19 @@ import ru.pearx.kormatter.parser.FormatString
  */
 interface IConversion
 {
-    val character: Char
-
     val widthDependency: PartDependency
 
     val precisionDependency: PartDependency
 
     fun checkFlags(str: FormatString)
+    {
+        for(flag in str.flags)
+        {
+            if(flag == FLAG_LEFT_JUSTIFIED && widthDependency != PartDependency.FORBIDDEN)
+                break
+            throw IllegalFlagsException("'$str' doesn't support the '$flag' flag.")
+        }
+    }
 
     fun format(str: FormatString): String
 

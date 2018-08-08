@@ -8,12 +8,12 @@
 package ru.pearx.kormatter
 
 import kotlinx.atomicfu.AtomicBoolean
-import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import ru.pearx.kormatter.conversion.IConversion
 import ru.pearx.kormatter.conversion.PartDependency
 import ru.pearx.kormatter.conversion.SimpleConversion
 import ru.pearx.kormatter.internal.lineSeparator
+import ru.pearx.kormatter.parser.FormatString
 import ru.pearx.kormatter.parser.FormatStringParser
 
 /*
@@ -41,8 +41,8 @@ open class Formatter
 
     init
     {
-        conversions.add(SimpleConversion('%', PartDependency.OPTIONAL, PartDependency.FORBIDDEN, "%"))
-        conversions.add(SimpleConversion('n', PartDependency.FORBIDDEN, PartDependency.FORBIDDEN, lineSeparator))
+        conversions.add('%', SimpleConversion(PartDependency.OPTIONAL, PartDependency.FORBIDDEN, "%"))
+        conversions.add('n', SimpleConversion(PartDependency.FORBIDDEN, PartDependency.FORBIDDEN, lineSeparator))
     }
 
     fun <T : Appendable> format(format: String, to: T, vararg args: Any?): T
@@ -58,12 +58,33 @@ open class Formatter
             val conversion = conversions.get(str.prefix, str.conversion)
                     ?: throw IllegalConversionException("Cannot find a conversion '${str.conversion}' with prefix '${str.prefix}'.")
             conversion.check(str)
-            to.append(conversion.format(str))
-            //todo width
+
+            val formatted = conversion.format(str)
+            appendWithWidth(str, formatted, to)
         }
         to.append(format.substring(textStart))
 
         return to
+    }
+
+    private fun appendWithWidth(str: FormatString, formatted: String, to: Appendable)
+    {
+        if (str.width != null)
+        {
+            val len = str.width - formatted.length
+            if (len > 0)
+            {
+                val reverse = str.flags.contains(FLAG_LEFT_JUSTIFIED)
+                if (reverse)
+                    to.append(formatted)
+                for (n in 1..len)
+                    to.append(' ')
+                if(!reverse)
+                    to.append(formatted)
+                return
+            }
+        }
+        to.append(formatted)
     }
 
     private fun recompileRegex()
@@ -94,65 +115,72 @@ open class Formatter
 
     fun format(format: String, vararg args: Any?): String = format(format, StringBuilder(), args).toString()
 
-    protected inner class ConversionContainer : Map<Char?, MutableList<IConversion>>
+    protected inner class ConversionContainer : Map<Char?, MutableMap<Char, IConversion>>
     {
-        private val conversions: MutableMap<Char?, MutableList<IConversion>> = HashMap()
+        private val conversions: MutableMap<Char?, MutableMap<Char, IConversion>> = HashMap()
 
-        fun add(prefix: Char?, toPut: IConversion): Boolean
+        fun add(prefix: Char?, char: Char, toPut: IConversion)
         {
-            var convs = conversions[prefix]
-            if (convs == null)
+            var conversionsForPrefix = conversions[prefix]
+            if (conversionsForPrefix == null)
             {
-                val lst = ArrayList<IConversion>()
+                //add new prefix
+                val lst = HashMap<Char, IConversion>()
                 conversions[prefix] = lst
-                convs = lst
-                shouldRecompileRegex = true
+                conversionsForPrefix = lst
+                if(prefix != null)
+                    shouldRecompileRegex = true
             }
-            for (conv in convs)
-                if (conv.character == toPut.character)
-                    throw ConversionAlreadyExistsException("The conversion of character '${conv.character}' already exists.")
-            return convs.add(toPut)
+
+            val existing = conversionsForPrefix[char]
+            if(existing != null)
+                throw ConversionAlreadyExistsException("The conversion of character '$char' already exists: $existing!")
+
+            conversionsForPrefix[char] = toPut
         }
 
-        fun add(toPut: IConversion): Boolean = add(null, toPut)
-
-        fun remove(prefix: Char?, conversion: Char): Boolean
+        fun add(prefix: Char?, chars: Array<Char>, toPut: IConversion)
         {
-            val convs = conversions[prefix] ?: return false
-
-            val it = convs.listIterator()
-            while (it.hasNext())
+            for(char in chars)
             {
-                if (it.next().character == conversion)
-                {
-                    it.remove()
-                    if (convs.isEmpty())
-                    {
-                        shouldRecompileRegex = true
-                        conversions.remove(prefix)
-                    }
-                    return true
-                }
+                add(prefix, char, toPut)
+            }
+        }
+
+        fun add(char: Char, toPut: IConversion) = add(null, char, toPut)
+
+        fun add(chars: Array<Char>, toPut: IConversion)
+        {
+            for(char in chars)
+            {
+                add(char, toPut)
+            }
+        }
+
+        fun remove(prefix: Char?, char: Char): Boolean
+        {
+            val conversionsForPrefix = conversions[prefix] ?: return false
+
+            if(conversionsForPrefix.remove(char) != null)
+            {
+                if(conversionsForPrefix.isEmpty())
+                    shouldRecompileRegex = true
+                return true
             }
             return false
         }
 
         fun remove(conversion: Char): Boolean = remove(null, conversion)
 
-        fun get(prefix: Char?, conversion: Char): IConversion?
+        fun get(prefix: Char?, char: Char): IConversion?
         {
-            val lst = conversions[prefix] ?: return null
-            for (conv in lst)
-            {
-                if (conv.character == conversion)
-                    return conv
-            }
-            return null
+            val conversionsForPrefix = conversions[prefix] ?: return null
+            return conversionsForPrefix[char]
         }
 
         fun get(conversion: Char): IConversion? = get(null, conversion)
 
-        override val entries: Set<Map.Entry<Char?, MutableList<IConversion>>>
+        override val entries: Set<Map.Entry<Char?, MutableMap<Char, IConversion>>>
             get() = conversions.entries
 
         override val keys: Set<Char?>
@@ -161,14 +189,14 @@ open class Formatter
         override val size: Int
             get() = conversions.size
 
-        override val values: Collection<MutableList<IConversion>>
+        override val values: Collection<MutableMap<Char, IConversion>>
             get() = conversions.values
 
         override fun containsKey(key: Char?): Boolean = conversions.containsKey(key)
 
-        override fun containsValue(value: MutableList<IConversion>): Boolean = conversions.containsValue(value)
+        override fun containsValue(value: MutableMap<Char, IConversion>): Boolean = conversions.containsValue(value)
 
-        override fun get(key: Char?): MutableList<IConversion>? = conversions[key]
+        override fun get(key: Char?): MutableMap<Char, IConversion>? = conversions.get(key)
 
         override fun isEmpty(): Boolean = conversions.isEmpty()
     }
