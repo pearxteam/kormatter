@@ -5,9 +5,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter
+package ru.pearx.kormatter.utils
+
 
 /*
- * Created by mrAppleXZ on 08.07.18 14:43
+ * Created by mrAppleXZ on 04.08.18.
  */
-fun String.format(vararg params: Any?) = Formatter.DEFAULT.format(this, params)
+internal fun String.toIntEmptyNull() = if (isEmpty()) null else toInt()
+internal fun String.singleEmptyNull() = if (isEmpty()) null else single()

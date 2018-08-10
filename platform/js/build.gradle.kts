@@ -21,34 +21,36 @@ configure<NodeExtension> {
 }
 
 dependencies {
-    compile(kotlin("stdlib-js"))
-    testCompile(kotlin("test-js"))
     expectedBy(project(":platform:common"))
 
+    compile(kotlin("stdlib-js"))
     compile("com.soywiz:klock-js:$klock_version")
     compile("org.jetbrains.kotlinx:atomicfu-js:$atomicfu_version")
+
+    testCompile(kotlin("test-js"))
 }
 
 tasks {
     withType<Kotlin2JsCompile> {
         kotlinOptions.moduleKind = "umd"
     }
-    "syncNodeModules"(Sync::class) {
+    create<Sync>("syncNodeModules") {
         dependsOn("compileKotlin2Js")
-        from(java.sourceSets["main"].output)
+        from(sourceSets["main"].output)
         configurations["testCompile"].forEach { from(zipTree(it)) }
         include { it.path.endsWith(".js", true) }
         into("$buildDir/node_modules")
     }
-    "installMocha"(NpmTask::class) {
+    create<NpmTask>("installMocha") {
         setArgs(listOf("install", "mocha"))
     }
-    "runMocha"(NodeTask::class) {
+    val compileTest = getByName<Kotlin2JsCompile>("compileTestKotlin2Js")
+    create<NodeTask>("runMocha") {
         dependsOn("installMocha", "syncNodeModules", "compileTestKotlin2Js")
         setScript(file("node_modules/mocha/bin/mocha"))
-        setArgs(listOf((getByName("compileTestKotlin2Js") as Kotlin2JsCompile).destinationDir))
+        setArgs(listOf(compileTest.destinationDir))
     }
-    "test" {
+    named<Test>("test") {
         dependsOn("runMocha")
     }
 }

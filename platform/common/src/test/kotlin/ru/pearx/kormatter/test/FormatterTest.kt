@@ -10,11 +10,9 @@ package ru.pearx.kormatter.test
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.Klock
 import ru.pearx.kormatter.*
+import ru.pearx.kormatter.exceptions.IllegalConversionException
 import kotlin.math.E
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 
 /*
@@ -25,7 +23,7 @@ class FormatterTest
     @Test
     fun testSimple()
     {
-        assertEquals("The Igor's middle name is gt22.", "The %s's surname is %s.".format("Igor", "gt22"))
+        assertEquals("The Igor's middle name is gt22.", "The %s's middle name is %s.".format("Igor", "gt22"))
         assertEquals("The 128 is 128, the 256 is 0x100.", "The 128 is %d, the 256 is 0x%h.".format(128, 256))
     }
 
@@ -89,6 +87,39 @@ class FormatterTest
     {
         assertEquals("         %", "%10%".format())
         assertEquals("%         ", "%-10%".format())
+        assertEquals("      true", "%10b".format(true))
+    }
+
+    @Test
+    fun testBoolean()
+    {
+        assertEquals("true", "%b".format(true))
+        assertEquals("false", "%b".format(false))
+        assertEquals("false", "%b".format(null))
+        assertEquals("true", "%b".format("not a boolean"))
+    }
+
+    @Test
+    fun testUppercase()
+    {
+        assertEquals("TRUE", "%B".format(true))
+        assertEquals("FALSE", "%B".format(false))
+    }
+
+    @Test
+    fun testString()
+    {
+        assertEquals("Stringy", "%s".format("Stringy"))
+        assertEquals("1024", "%s".format(1024))
+        assertEquals("null", "%s".format(null))
+    }
+
+    @Test
+    fun testHashcode()
+    {
+        assertEquals("0x400", "0x%h".format(1024))
+        assertEquals("13bb", "%h".format(5051))
+        assertEquals("723b6f3b", "%h".format("NAN ACHTUNG"))
     }
 
     @Test

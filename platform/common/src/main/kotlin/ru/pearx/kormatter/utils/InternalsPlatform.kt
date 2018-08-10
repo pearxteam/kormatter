@@ -5,12 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.internal
+package ru.pearx.kormatter.utils
 
 
 /*
  * Created by mrAppleXZ on 07.08.18.
  */
-
-internal actual val lineSeparator: String
-        get() = "\n"
+internal expect val lineSeparator: String

@@ -5,11 +5,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.internal
-
+package ru.pearx.kormatter
 
 /*
- * Created by mrAppleXZ on 07.08.18.
+ * Created by mrAppleXZ on 08.07.18 14:43
  */
-internal actual val lineSeparator: String
-    get() = System.lineSeparator()
+fun String.format(vararg args: Any?) = Formatter.DEFAULT.format(this, *args)

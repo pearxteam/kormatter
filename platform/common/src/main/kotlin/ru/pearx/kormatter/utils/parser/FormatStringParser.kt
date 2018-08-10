@@ -5,10 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.parser
+package ru.pearx.kormatter.utils.parser
 
-import ru.pearx.kormatter.internal.singleEmptyNull
-import ru.pearx.kormatter.internal.toIntEmptyNull
+import ru.pearx.kormatter.utils.singleEmptyNull
+import ru.pearx.kormatter.utils.toIntEmptyNull
 
 
 /*

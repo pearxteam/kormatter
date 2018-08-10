@@ -5,11 +5,12 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.internal
+package ru.pearx.kormatter.utils
 
 
 /*
- * Created by mrAppleXZ on 04.08.18.
+ * Created by mrAppleXZ on 07.08.18.
  */
-internal fun String.toIntEmptyNull() = if (isEmpty()) null else toInt()
-internal fun String.singleEmptyNull() = if (isEmpty()) null else single()
+
+internal actual val lineSeparator: String
+        get() = "\n"

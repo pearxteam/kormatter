@@ -19,17 +19,17 @@ configure<JavaPluginConvention> {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8"))
-    testCompile(kotlin("test-junit5"))
-    testCompile(kotlin("test-annotations-common"))
-    testCompile(kotlin("test-common"))
     expectedBy(project(":platform:common"))
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version")
-
+    compile(kotlin("stdlib-jdk8"))
     compile("com.soywiz:klock:$klock_version")
     compileOnly("org.jetbrains.kotlinx:atomicfu:$atomicfu_version")
+
+    testCompile(kotlin("test-annotations-common"))
+    testCompile(kotlin("test-junit5"))
+    testCompile("org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version")
+    testRuntime("org.jetbrains.kotlinx:atomicfu:$atomicfu_version")
 }
 
 jacoco {
@@ -40,7 +40,7 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
     }
-    "test"(Test::class) {
+    named<Test>("test") {
         useJUnitPlatform()
     }
 }
