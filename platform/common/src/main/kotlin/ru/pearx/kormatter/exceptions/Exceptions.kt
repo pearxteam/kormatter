@@ -36,4 +36,4 @@ class IllegalFormatCodePointException(
         val codePoint: Int
 ) : IllegalFormatArgumentException(formatString, "Illegal code point: $codePoint!")
 
-class FormatterAlreadyBuiltException() : RuntimeException("The formatter has already built!")
+class FormatterAlreadyBuiltException : RuntimeException("The formatter has already built!")
