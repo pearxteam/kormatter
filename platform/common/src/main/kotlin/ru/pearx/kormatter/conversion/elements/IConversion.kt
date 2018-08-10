@@ -23,7 +23,7 @@ interface IConversion
 
     val canTakeArguments: Boolean
 
-    fun format(str: FormatString, indexHolder: ArgumentIndexHolder, vararg args: Any?): String
+    fun <T : Appendable> format(str: FormatString, indexHolder: ArgumentIndexHolder, to: T, vararg args: Any?): T
 
     fun check(str: FormatString)
 }

@@ -24,6 +24,14 @@ abstract class Conversion : IConversion
         checkFlags(str)
     }
 
+    abstract fun format(str: FormatString, indexHolder: ArgumentIndexHolder, to: Appendable, vararg args: Any?)
+
+    override fun <T : Appendable> format(str: FormatString, indexHolder: ArgumentIndexHolder, to: T, vararg args: Any?): T
+    {
+        format(str, indexHolder, to, *args)
+        return to
+    }
+
     protected open fun checkFlags(str: FormatString)
     {
         for (flag in str.flags)

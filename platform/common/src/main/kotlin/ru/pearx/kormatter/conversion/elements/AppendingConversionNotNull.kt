@@ -8,8 +8,8 @@ import ru.pearx.kormatter.utils.ArgumentIndexHolder
 /*
  * Created by mrAppleXZ on 09.08.18.
  */
-open class BaseConversionNotNull(
-        private val formatter: (FormatString, Any) -> String,
+open class AppendingConversionNotNull(
+        private val formatter: (FormatString, Appendable, Any) -> Unit,
         override val widthDependency: PartDependency = PartDependency.OPTIONAL,
         override val precisionDependency: PartDependency = PartDependency.OPTIONAL
 ) : Conversion()
@@ -17,13 +17,13 @@ open class BaseConversionNotNull(
     override val canTakeArguments: Boolean
         get() = true
 
-    override fun format(str: FormatString, indexHolder: ArgumentIndexHolder, vararg args: Any?): String
+    override fun format(str: FormatString, indexHolder: ArgumentIndexHolder, to: Appendable, vararg args: Any?)
     {
         val arg = takeArgument(str, indexHolder, *args)
-        return when(arg)
+        when(arg)
         {
-            null -> "null"
-            else -> formatter(str, arg)
+            null -> to.append("null")
+            else -> formatter(str, to, arg)
         }
     }
 }

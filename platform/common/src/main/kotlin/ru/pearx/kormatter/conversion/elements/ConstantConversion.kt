@@ -15,7 +15,7 @@ import ru.pearx.kormatter.utils.ArgumentIndexHolder
 /*
  * Created by mrAppleXZ on 07.08.18.
  */
-class SimpleConversion(
+class ConstantConversion(
         private val replacement: String,
         override val widthDependency: PartDependency = PartDependency.OPTIONAL,
         override val precisionDependency: PartDependency = PartDependency.OPTIONAL
@@ -24,5 +24,8 @@ class SimpleConversion(
     override val canTakeArguments: Boolean
         get() = false
 
-    override fun format(str: FormatString, indexHolder: ArgumentIndexHolder, vararg args: Any?): String = replacement
+    override fun format(str: FormatString, indexHolder: ArgumentIndexHolder, to: Appendable, vararg args: Any?)
+    {
+        to.append(replacement)
+    }
 }

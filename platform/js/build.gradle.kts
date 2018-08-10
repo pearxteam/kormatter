@@ -10,7 +10,6 @@ plugins {
 }
 
 val klock_version: String by project
-val atomicfu_version: String by project
 val nodejs_version: String by project
 val npm_version: String by project
 
@@ -25,7 +24,6 @@ dependencies {
 
     compile(kotlin("stdlib-js"))
     compile("com.soywiz:klock-js:$klock_version")
-    compile("org.jetbrains.kotlinx:atomicfu-js:$atomicfu_version")
 
     testCompile(kotlin("test-js"))
 }
