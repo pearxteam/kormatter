@@ -5,22 +5,28 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.conversion.elements
+package ru.pearx.kormatter.conversion.elements.base
 
 import ru.pearx.kormatter.conversion.PartDependency
-import ru.pearx.kormatter.utils.parser.FormatString
 import ru.pearx.kormatter.utils.ArgumentIndexHolder
+import ru.pearx.kormatter.utils.parser.FormatString
 
 
 /*
- * Created by mrAppleXZ on 09.08.18.
+ * Created by mrAppleXZ on 10.08.18.
  */
-open class AppendingConversionNotNull(
-        private val formatter: (FormatString, Appendable, Any) -> Unit,
+class ConversionNotNull(
+        override val precisionDependency: PartDependency = PartDependency.OPTIONAL,
         override val widthDependency: PartDependency = PartDependency.OPTIONAL,
-        override val precisionDependency: PartDependency = PartDependency.OPTIONAL
-) : Conversion()
+        private val formatter: (FormatString, Appendable, Any) -> Unit
+) : ConversionBase()
 {
+    constructor(
+            precisionDependency: PartDependency = PartDependency.OPTIONAL,
+            widthDependency: PartDependency = PartDependency.OPTIONAL,
+            formatter: (FormatString, Any) -> String
+    ) : this(precisionDependency, widthDependency, { str, to, arg -> to.append(formatter(str, arg)) })
+
     override val canTakeArguments: Boolean
         get() = true
 

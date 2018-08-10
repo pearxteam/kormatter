@@ -5,7 +5,7 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.conversion.elements
+package ru.pearx.kormatter.conversion.elements.base
 
 import ru.pearx.kormatter.conversion.PartDependency
 import ru.pearx.kormatter.utils.ArgumentIndexHolder

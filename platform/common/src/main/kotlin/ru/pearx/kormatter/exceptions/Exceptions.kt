@@ -8,7 +8,7 @@
 package ru.pearx.kormatter.exceptions
 
 import ru.pearx.kormatter.conversion.PartDependency
-import ru.pearx.kormatter.conversion.elements.IConversion
+import ru.pearx.kormatter.conversion.elements.base.IConversion
 import ru.pearx.kormatter.utils.parser.FormatString
 
 

@@ -5,7 +5,7 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.conversion.elements
+package ru.pearx.kormatter.conversion.elements.base
 
 import ru.pearx.kormatter.conversion.PartDependency
 import ru.pearx.kormatter.utils.parser.FormatString
@@ -15,11 +15,11 @@ import ru.pearx.kormatter.utils.ArgumentIndexHolder
 /*
  * Created by mrAppleXZ on 07.08.18.
  */
-class ConstantConversion(
+class ConversionConstant(
         private val replacement: String,
         override val widthDependency: PartDependency = PartDependency.OPTIONAL,
         override val precisionDependency: PartDependency = PartDependency.OPTIONAL
-) : Conversion()
+) : ConversionBase()
 {
     override val canTakeArguments: Boolean
         get() = false

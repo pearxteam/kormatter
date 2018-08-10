@@ -9,6 +9,7 @@ package ru.pearx.kormatter
 
 import ru.pearx.kormatter.conversion.*
 import ru.pearx.kormatter.conversion.elements.*
+import ru.pearx.kormatter.conversion.elements.base.*
 import ru.pearx.kormatter.exceptions.ConversionAlreadyExistsException
 import ru.pearx.kormatter.exceptions.FormatterAlreadyBuiltException
 import ru.pearx.kormatter.exceptions.IllegalConversionException
@@ -77,7 +78,7 @@ open class Formatter(addStandardConversions: Boolean)
     private fun append(str: FormatString, conversion: IConversion, indexHolder: ArgumentIndexHolder, to: Appendable, vararg args: Any?)
     {
         //todo precision
-        if(str.width != null)
+        if (str.width != null)
         {
             val formatted: StringBuilder = conversion.format(str, indexHolder, StringBuilder(), *args)
             val len = str.width - formatted.length
@@ -106,29 +107,32 @@ open class Formatter(addStandardConversions: Boolean)
 
         fun addStandardConversions()
         {
-            add('%', ConstantConversion("%", precisionDependency = PartDependency.FORBIDDEN))
-            add('n', ConstantConversion(lineSeparator, PartDependency.FORBIDDEN, PartDependency.FORBIDDEN))
-            add('b', StringConversion(
-                    { _, arg ->
-                        when (arg)
-                        {
-                            null -> "false"
-                            is Boolean -> arg.toString()
-                            else -> "true"
-                        }
-                    }
-            ), true)
-            add('s', StringConversion(
-                    { _, arg -> arg.toString() } //todo Formattable support
-            ), true)
-            add('h', StringConversionNotNull(
-                    { _, arg -> arg.hashCode().toString(16) }
-            ), true)
+            add('%', ConversionConstant("%", precisionDependency = PartDependency.FORBIDDEN))
+
+            add('n', ConversionConstant(lineSeparator, PartDependency.FORBIDDEN, PartDependency.FORBIDDEN))
+            add('b', Conversion
+            { _, arg ->
+                when (arg)
+                {
+                    null -> "false"
+                    is Boolean -> arg.toString()
+                    else -> "true"
+                }
+            }, true)
+            add('s', Conversion { _, arg -> arg.toString() }, true)
+            add('h', ConversionNotNull { _, arg -> arg.hashCode().toString(16) }, true)
+            add('c', ConversionNotNull
+            { _, app, arg ->
+                when (arg)
+                {
+                    is Char -> app.append(arg)
+                }
+            }, true)
         }
 
         fun add(prefix: Char?, char: Char, toPut: IConversion, uppercaseVariant: Boolean = false)
         {
-            if(regex.isInitialized())
+            if (regex.isInitialized())
                 throw FormatterAlreadyBuiltException()
             var conversionsForPrefix = conversions[prefix]
             if (conversionsForPrefix == null)
@@ -157,7 +161,7 @@ open class Formatter(addStandardConversions: Boolean)
 
         fun remove(prefix: Char?, char: Char): Boolean
         {
-            if(regex.isInitialized())
+            if (regex.isInitialized())
                 throw FormatterAlreadyBuiltException()
             val conversionsForPrefix = conversions[prefix] ?: return false
 
