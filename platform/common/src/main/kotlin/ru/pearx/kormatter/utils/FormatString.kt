@@ -5,7 +5,7 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils.parser
+package ru.pearx.kormatter.utils
 
 
 /*
@@ -24,17 +24,17 @@ data class FormatString(
 {
     override fun toString(): String
     {
-        val sb = StringBuilder()
-        sb.append("%")
-        if(argumentIndex != null)
-            sb.append(argumentIndex).append("$")
-        if(width != null)
-            sb.append(width)
-        if(precision != null)
-            sb.append(".").append(precision)
-        if(prefix != null)
-            sb.append(prefix)
-        sb.append(conversion)
-        return sb.toString()
+        return StringBuilder().apply {
+            append("%")
+            if (argumentIndex != null)
+                append(argumentIndex).append("$")
+            if (width != null)
+                append(width)
+            if (precision != null)
+                append(".").append(precision)
+            if (prefix != null)
+                append(prefix)
+            append(conversion)
+        }.toString()
     }
 }

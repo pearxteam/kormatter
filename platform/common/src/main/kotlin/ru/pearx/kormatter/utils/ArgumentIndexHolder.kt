@@ -11,7 +11,7 @@ package ru.pearx.kormatter.utils
 /*
  * Created by mrAppleXZ on 08.08.18.
  */
-class ArgumentIndexHolder(
+class ArgumentIndexHolder internal constructor(
         var lastOrdinary: Int,
         var lastTaken: Int
 )

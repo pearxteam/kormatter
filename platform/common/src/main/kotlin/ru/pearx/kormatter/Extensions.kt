@@ -10,4 +10,4 @@ package ru.pearx.kormatter
 /*
  * Created by mrAppleXZ on 08.07.18 14:43
  */
-fun String.format(vararg args: Any?) = Formatter.DEFAULT.format(this, *args)
+fun String.format(vararg args: Any?) = Formatter.format(this, *args)

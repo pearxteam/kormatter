@@ -9,7 +9,7 @@ package ru.pearx.kormatter.conversion.elements
 
 import ru.pearx.kormatter.conversion.PartDependency
 import ru.pearx.kormatter.conversion.elements.base.IConversion
-import ru.pearx.kormatter.utils.parser.FormatString
+import ru.pearx.kormatter.utils.FormatString
 import ru.pearx.kormatter.utils.ArgumentIndexHolder
 
 

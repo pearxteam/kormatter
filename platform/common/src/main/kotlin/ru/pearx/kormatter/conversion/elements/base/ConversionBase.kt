@@ -13,7 +13,7 @@ import ru.pearx.kormatter.exceptions.IllegalFlagsException
 import ru.pearx.kormatter.exceptions.IllegalPrecisionException
 import ru.pearx.kormatter.exceptions.IllegalWidthException
 import ru.pearx.kormatter.exceptions.NoSuchArgumentException
-import ru.pearx.kormatter.utils.parser.FormatString
+import ru.pearx.kormatter.utils.FormatString
 import ru.pearx.kormatter.utils.ArgumentIndexHolder
 
 
@@ -53,9 +53,9 @@ abstract class ConversionBase : IConversion
 
     protected open fun takeArgument(str: FormatString, indexHolder: ArgumentIndexHolder, vararg args: Any?): Any?
     {
-        //use explicit argument index
         when
         {
+            //use explicit argument index
             str.argumentIndex != null ->
             {
                 try

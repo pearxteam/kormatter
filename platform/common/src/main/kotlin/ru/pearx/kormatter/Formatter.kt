@@ -13,24 +13,23 @@ import ru.pearx.kormatter.conversion.elements.base.*
 import ru.pearx.kormatter.exceptions.ConversionAlreadyExistsException
 import ru.pearx.kormatter.exceptions.FormatterAlreadyBuiltException
 import ru.pearx.kormatter.exceptions.IllegalConversionException
-import ru.pearx.kormatter.utils.parser.FormatStringParser
 import ru.pearx.kormatter.utils.ArgumentIndexHolder
 import ru.pearx.kormatter.utils.lineSeparator
-import ru.pearx.kormatter.utils.parser.FormatString
+import ru.pearx.kormatter.utils.FormatString
+import ru.pearx.kormatter.utils.parseFormatString
 
 /*
  * Created by mrAppleXZ on 04.07.18 18:11
  */
-
 open class Formatter(addStandardConversions: Boolean)
 {
     private val regex = lazy {
         //%[argumentIndex$][flags][width][.precision][prefix]conversion
-        //%(?:(\d+)\$)?([ALLOWED_FLAGS]+)?(\d+)?(?:\.(\d+))?([ALLOWED_PREFIXES])?(.)
+        //%(?:(?<argumentIndex>\d+)\$)?(?<flags>[ALLOWED_FLAGS]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>[ALLOWED_PREFIXES])?(?<conversion>.)
         val sb = StringBuilder()
-        sb.append("""%(?:(\d+)\$)?([""")
+        sb.append("""%(?:(?<argumentIndex>\d+)\$)?(?<flags>[""")
         sb.append(Regex.escape(String(flags.toCharArray())))
-        sb.append("""]+)?(\d+)?(?:\.(\d+))?(""")
+        sb.append("""]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>""")
 
         val sbPrefixes = StringBuilder(conversions.size)
         for (ch in conversions.keys)
@@ -41,9 +40,9 @@ open class Formatter(addStandardConversions: Boolean)
             sb.append("[").append(Regex.escape(sbPrefixes.toString())).append("]")
         }
 
-        sb.append(""")?(.)""")
+        sb.append(""")?(?<conversion>.)""")
 
-        return@lazy Regex(sb.toString())
+        Regex(sb.toString())
     }
     protected val conversions: ConversionContainer = ConversionContainer()
     protected val flags: MutableList<Char> = ArrayList(listOf(FLAG_LEFT_JUSTIFIED, FLAG_REUSE_ARGUMENT_INDEX, FLAG_ALTERNATE_FORM, FLAG_INCLUDE_SIGN, FLAG_POSITIVE_LEADING_SPACE, FLAG_ZERO_PADDED, FLAG_LOCALE_SPECIFIC_GROUPING_SEPARATORS, FLAG_NEGATIVE_PARENTHESES))
@@ -59,7 +58,7 @@ open class Formatter(addStandardConversions: Boolean)
         val indexHolder = ArgumentIndexHolder(-1, -1)
 
         var textStart = 0
-        for (str in FormatStringParser.parse(format, regex.value))
+        for (str in parseFormatString(format, regex.value))
         {
             to.append(format.substring(textStart, str.start))
             textStart = str.endInclusive + 1
@@ -101,7 +100,7 @@ open class Formatter(addStandardConversions: Boolean)
 
     fun format(format: String, vararg args: Any?): String = format(format, StringBuilder(), *args).toString()
 
-    protected inner class ConversionContainer : Map<Char?, MutableMap<Char, IConversion>>
+    inner class ConversionContainer : Map<Char?, MutableMap<Char, IConversion>>
     {
         private val conversions: MutableMap<Char?, MutableMap<Char, IConversion>> = HashMap()
 
@@ -126,6 +125,9 @@ open class Formatter(addStandardConversions: Boolean)
                 when (arg)
                 {
                     is Char -> app.append(arg)
+                    is Byte, is Short, is Int ->
+                    {
+                    }
                 }
             }, true)
         }
@@ -198,13 +200,10 @@ open class Formatter(addStandardConversions: Boolean)
 
         override fun containsValue(value: MutableMap<Char, IConversion>): Boolean = conversions.containsValue(value)
 
-        override fun get(key: Char?): MutableMap<Char, IConversion>? = conversions.get(key)
+        override fun get(key: Char?): MutableMap<Char, IConversion>? = conversions[key]
 
         override fun isEmpty(): Boolean = conversions.isEmpty()
     }
 
-    companion object
-    {
-        val DEFAULT = Formatter(true)
-    }
+    companion object : Formatter(true)
 }

@@ -11,5 +11,6 @@ package ru.pearx.kormatter.utils
 /*
  * Created by mrAppleXZ on 04.08.18.
  */
-internal fun String.toIntEmptyNull() = if (isEmpty()) null else toInt()
-internal fun String.singleEmptyNull() = if (isEmpty()) null else single()
+internal fun String.intNonEmpty() = if (isEmpty()) null else toInt()
+internal fun String.singleNonEmpty() = if (isEmpty()) null else single()
+internal operator fun MatchResult.get(v: String): String = (this.groups as MatchNamedGroupCollection)[v]?.value ?: ""
