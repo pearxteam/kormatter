@@ -7,7 +7,6 @@
 
 package ru.pearx.kormatter.utils.internal
 
-
 /*
  * Created by mrAppleXZ on 07.08.18.
  */
