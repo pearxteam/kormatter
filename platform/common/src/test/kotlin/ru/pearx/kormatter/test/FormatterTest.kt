@@ -9,10 +9,14 @@ package ru.pearx.kormatter.test
 
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.Klock
-import ru.pearx.kormatter.*
+import ru.pearx.kormatter.Formatter
 import ru.pearx.kormatter.exceptions.IllegalConversionException
+import ru.pearx.kormatter.format
 import kotlin.math.E
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 
 /*
@@ -56,7 +60,7 @@ class FormatterTest
             for (el in arr)
             {
                 val tm = Klock.currentTimeMillis()
-                Formatter.DEFAULT.format(el)
+                Formatter.format(el)
                 println(Klock.currentTimeMillis() - tm)
             }
         println("Total: ${Klock.currentTimeMillis() - t}")

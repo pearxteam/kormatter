@@ -5,9 +5,9 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils
+package ru.pearx.kormatter.utils.internal
 
-import kotlin.coroutines.experimental.buildIterator
+import ru.pearx.kormatter.utils.FormatString
 
 
 /*
@@ -24,14 +24,15 @@ internal fun parseFormatString(format: String, regex: Regex): Iterator<FormatStr
         override fun next(): FormatString
         {
             val nxt = next ?: throw NoSuchElementException()
+            val groups = nxt.groups as MatchNamedGroupCollection
 
             val result = FormatString(
-                    argumentIndex = nxt["argumentIndex"].intNonEmpty(),
-                    flags = nxt["flags"],
-                    width = nxt["width"].intNonEmpty(),
-                    precision = nxt["precision"].intNonEmpty(),
-                    prefix = nxt["prefix"].singleNonEmpty(),
-                    conversion = nxt["conversion"].single(),
+                    argumentIndex = groups["argumentIndex"].orEmpty().toIntOrNull(),
+                    flags = groups["flags"].orEmpty(),
+                    width = groups["width"].orEmpty().toIntOrNull(),
+                    precision = groups["precision"].orEmpty().toIntOrNull(),
+                    prefix = groups["prefix"].orEmpty().singleOrNull(),
+                    conversion = groups["conversion"].orEmpty().single(),
                     start = nxt.range.start,
                     endInclusive = nxt.range.endInclusive
             )

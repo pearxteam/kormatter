@@ -7,9 +7,9 @@
 
 package ru.pearx.kormatter.exceptions
 
-import ru.pearx.kormatter.conversion.PartDependency
-import ru.pearx.kormatter.conversion.elements.base.IConversion
+import ru.pearx.kormatter.conversions.Conversion
 import ru.pearx.kormatter.utils.FormatString
+import ru.pearx.kormatter.utils.PartDependency
 
 
 /*
@@ -25,7 +25,7 @@ class IllegalConversionException(formatString: FormatString) : FormatStringExcep
         get() = "Cannot find a conversion '${formatString.prefix ?: ""}${formatString.conversion}'."
 }
 
-class ConversionAlreadyExistsException(val prefix: Char?, val conversion: Char, val existing: IConversion) : RuntimeException()
+class ConversionAlreadyExistsException(val prefix: Char?, val conversion: Char, val existing: Conversion) : RuntimeException()
 {
     override val message: String?
         get() = "The conversion of character '${prefix ?: ""}$conversion' already exists: $existing!"

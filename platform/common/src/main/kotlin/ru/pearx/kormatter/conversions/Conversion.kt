@@ -5,17 +5,17 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.conversion.elements.base
+package ru.pearx.kormatter.conversions
 
-import ru.pearx.kormatter.conversion.PartDependency
-import ru.pearx.kormatter.utils.ArgumentIndexHolder
+import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
+import ru.pearx.kormatter.utils.PartDependency
 
 
 /*
  * Created by mrAppleXZ on 04.08.18.
  */
-interface IConversion
+interface Conversion
 {
     val widthDependency: PartDependency
 
@@ -23,7 +23,7 @@ interface IConversion
 
     val canTakeArguments: Boolean
 
-    fun <T : Appendable> format(str: FormatString, indexHolder: ArgumentIndexHolder, to: T, vararg args: Any?): T
+    fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
 
     fun check(str: FormatString)
 }

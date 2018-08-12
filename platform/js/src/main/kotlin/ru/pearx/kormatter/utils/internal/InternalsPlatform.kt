@@ -5,13 +5,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils
+package ru.pearx.kormatter.utils.internal
 
 
 /*
- * Created by mrAppleXZ on 08.08.18.
+ * Created by mrAppleXZ on 07.08.18.
  */
-class ArgumentIndexHolder internal constructor(
-        var lastOrdinary: Int,
-        var lastTaken: Int
-)
+internal actual val lineSeparator: String
+        get() = "\n"

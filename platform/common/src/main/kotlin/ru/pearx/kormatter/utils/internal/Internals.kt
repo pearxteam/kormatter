@@ -5,11 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils
+package ru.pearx.kormatter.utils.internal
 
 
 /*
- * Created by mrAppleXZ on 07.08.18.
+ * Created by mrAppleXZ on 12.08.18.
  */
-internal actual val lineSeparator: String
-    get() = System.lineSeparator()
+fun MatchGroup?.orEmpty(): String = this?.value.orEmpty()

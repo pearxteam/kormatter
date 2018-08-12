@@ -7,16 +7,18 @@
 
 package ru.pearx.kormatter
 
-import ru.pearx.kormatter.conversion.*
-import ru.pearx.kormatter.conversion.elements.*
-import ru.pearx.kormatter.conversion.elements.base.*
+import ru.pearx.kormatter.conversions.Conversion
+import ru.pearx.kormatter.conversions.conversion
+import ru.pearx.kormatter.conversions.conversionNotNull
 import ru.pearx.kormatter.exceptions.ConversionAlreadyExistsException
 import ru.pearx.kormatter.exceptions.FormatterAlreadyBuiltException
 import ru.pearx.kormatter.exceptions.IllegalConversionException
-import ru.pearx.kormatter.utils.ArgumentIndexHolder
-import ru.pearx.kormatter.utils.lineSeparator
+import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.parseFormatString
+import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
+import ru.pearx.kormatter.utils.internal.lineSeparator
+import ru.pearx.kormatter.utils.internal.parseFormatString
 
 /*
  * Created by mrAppleXZ on 04.07.18 18:11
@@ -25,24 +27,22 @@ open class Formatter(addStandardConversions: Boolean)
 {
     private val regex = lazy {
         //%[argumentIndex$][flags][width][.precision][prefix]conversion
-        //%(?:(?<argumentIndex>\d+)\$)?(?<flags>[ALLOWED_FLAGS]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>[ALLOWED_PREFIXES])?(?<conversion>.)
-        val sb = StringBuilder()
-        sb.append("""%(?:(?<argumentIndex>\d+)\$)?(?<flags>[""")
-        sb.append(Regex.escape(String(flags.toCharArray())))
-        sb.append("""]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>""")
+        Regex(StringBuilder().apply {
+            append("""%(?:(?<argumentIndex>\d+)\$)?(?<flags>[""")
+            append(Regex.escape(String(flags.toCharArray())))
+            append("""]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>""")
 
-        val sbPrefixes = StringBuilder(conversions.size)
-        for (ch in conversions.keys)
-            if (ch != null)
-                sbPrefixes.append(ch)
-        if (!sbPrefixes.isEmpty())
-        {
-            sb.append("[").append(Regex.escape(sbPrefixes.toString())).append("]")
-        }
+            val sbPrefixes = StringBuilder(conversions.size)
+            for (ch in conversions.keys)
+                if (ch != null)
+                    sbPrefixes.append(ch)
+            if (!sbPrefixes.isEmpty())
+            {
+                append("[").append(Regex.escape(sbPrefixes.toString())).append("]")
+            }
 
-        sb.append(""")?(?<conversion>.)""")
-
-        Regex(sb.toString())
+            append(""")?(?<conversion>.)""")
+        }.toString())
     }
     protected val conversions: ConversionContainer = ConversionContainer()
     protected val flags: MutableList<Char> = ArrayList(listOf(FLAG_LEFT_JUSTIFIED, FLAG_REUSE_ARGUMENT_INDEX, FLAG_ALTERNATE_FORM, FLAG_INCLUDE_SIGN, FLAG_POSITIVE_LEADING_SPACE, FLAG_ZERO_PADDED, FLAG_LOCALE_SPECIFIC_GROUPING_SEPARATORS, FLAG_NEGATIVE_PARENTHESES))
@@ -55,11 +55,12 @@ open class Formatter(addStandardConversions: Boolean)
 
     fun <T : Appendable> format(format: String, to: T, vararg args: Any?): T
     {
-        val indexHolder = ArgumentIndexHolder(-1, -1)
+        val taker = ArgumentTaker(ArgumentIndexHolder(-1, -1), args)
 
         var textStart = 0
         for (str in parseFormatString(format, regex.value))
         {
+            taker.formatString = str
             to.append(format.substring(textStart, str.start))
             textStart = str.endInclusive + 1
 
@@ -67,19 +68,21 @@ open class Formatter(addStandardConversions: Boolean)
                     ?: throw IllegalConversionException(str)
             conversion.check(str)
 
-            append(str, conversion, indexHolder, to, *args)
+            append(str, conversion, taker, to)
         }
         to.append(format.substring(textStart))
 
         return to
     }
 
-    private fun append(str: FormatString, conversion: IConversion, indexHolder: ArgumentIndexHolder, to: Appendable, vararg args: Any?)
+    private fun append(str: FormatString, conversion: Conversion, taker: ArgumentTaker, to: Appendable)
     {
         //todo precision
         if (str.width != null)
         {
-            val formatted: StringBuilder = conversion.format(str, indexHolder, StringBuilder(), *args)
+            val formatted = StringBuilder()
+            conversion.format(str, taker, formatted)
+
             val len = str.width - formatted.length
             if (len > 0)
             {
@@ -95,21 +98,22 @@ open class Formatter(addStandardConversions: Boolean)
                 to.append(formatted)
         }
         else
-            conversion.format(str, indexHolder, to, *args)
+            conversion.format(str, taker, to)
     }
 
     fun format(format: String, vararg args: Any?): String = format(format, StringBuilder(), *args).toString()
 
-    inner class ConversionContainer : Map<Char?, MutableMap<Char, IConversion>>
+    inner class ConversionContainer : Map<Char?, MutableMap<Char, Conversion>>
     {
-        private val conversions: MutableMap<Char?, MutableMap<Char, IConversion>> = HashMap()
+        private val conversions: MutableMap<Char?, MutableMap<Char, Conversion>> = HashMap()
 
         fun addStandardConversions()
         {
-            add('%', ConversionConstant("%", precisionDependency = PartDependency.FORBIDDEN))
+            add('%', conversion("%", precisionDependency = PartDependency.FORBIDDEN))
 
-            add('n', ConversionConstant(lineSeparator, PartDependency.FORBIDDEN, PartDependency.FORBIDDEN))
-            add('b', Conversion
+            add('n', conversion(lineSeparator, PartDependency.FORBIDDEN, PartDependency.FORBIDDEN))
+
+            add('b', conversion
             { _, arg ->
                 when (arg)
                 {
@@ -118,21 +122,19 @@ open class Formatter(addStandardConversions: Boolean)
                     else -> "true"
                 }
             }, true)
-            add('s', Conversion { _, arg -> arg.toString() }, true)
-            add('h', ConversionNotNull { _, arg -> arg.hashCode().toString(16) }, true)
-            add('c', ConversionNotNull
-            { _, app, arg ->
-                when (arg)
-                {
-                    is Char -> app.append(arg)
-                    is Byte, is Short, is Int ->
-                    {
-                    }
-                }
+
+            add('s', conversion
+            { _, arg ->
+                arg.toString()
+            }, true)
+
+            add('h', conversionNotNull
+            { _, arg ->
+                arg.hashCode().toString(16)
             }, true)
         }
 
-        fun add(prefix: Char?, char: Char, toPut: IConversion, uppercaseVariant: Boolean = false)
+        fun add(prefix: Char?, char: Char, toPut: Conversion, uppercaseVariant: Boolean = false)
         {
             if (regex.isInitialized())
                 throw FormatterAlreadyBuiltException()
@@ -140,17 +142,17 @@ open class Formatter(addStandardConversions: Boolean)
             if (conversionsForPrefix == null)
             {
                 //add new prefix
-                val lst = HashMap<Char, IConversion>()
+                val lst = HashMap<Char, Conversion>()
                 conversions[prefix] = lst
                 conversionsForPrefix = lst
             }
 
             putConversion(conversionsForPrefix, prefix, char, toPut)
             if (uppercaseVariant)
-                putConversion(conversionsForPrefix, prefix, char.toUpperCase(), UppercaseConversion(toPut))
+                putConversion(conversionsForPrefix, prefix, char.toUpperCase(), ru.pearx.kormatter.conversions.UppercaseConversion(toPut))
         }
 
-        private fun putConversion(conversionsForPrefix: MutableMap<Char, IConversion>, prefix: Char?, char: Char, toPut: IConversion)
+        private fun putConversion(conversionsForPrefix: MutableMap<Char, Conversion>, prefix: Char?, char: Char, toPut: Conversion)
         {
             val existing = conversionsForPrefix[char]
             if (existing != null)
@@ -159,7 +161,7 @@ open class Formatter(addStandardConversions: Boolean)
             conversionsForPrefix[char] = toPut
         }
 
-        fun add(char: Char, toPut: IConversion, uppercaseVariant: Boolean = false) = add(null, char, toPut, uppercaseVariant)
+        fun add(char: Char, toPut: Conversion, uppercaseVariant: Boolean = false) = add(null, char, toPut, uppercaseVariant)
 
         fun remove(prefix: Char?, char: Char): Boolean
         {
@@ -176,15 +178,15 @@ open class Formatter(addStandardConversions: Boolean)
 
         fun remove(conversion: Char): Boolean = remove(null, conversion)
 
-        fun get(prefix: Char?, char: Char): IConversion?
+        fun get(prefix: Char?, char: Char): Conversion?
         {
             val conversionsForPrefix = conversions[prefix] ?: return null
             return conversionsForPrefix[char]
         }
 
-        fun get(conversion: Char): IConversion? = get(null, conversion)
+        fun get(conversion: Char): Conversion? = get(null, conversion)
 
-        override val entries: Set<Map.Entry<Char?, MutableMap<Char, IConversion>>>
+        override val entries: Set<Map.Entry<Char?, MutableMap<Char, Conversion>>>
             get() = conversions.entries
 
         override val keys: Set<Char?>
@@ -193,14 +195,14 @@ open class Formatter(addStandardConversions: Boolean)
         override val size: Int
             get() = conversions.size
 
-        override val values: Collection<MutableMap<Char, IConversion>>
+        override val values: Collection<MutableMap<Char, Conversion>>
             get() = conversions.values
 
         override fun containsKey(key: Char?): Boolean = conversions.containsKey(key)
 
-        override fun containsValue(value: MutableMap<Char, IConversion>): Boolean = conversions.containsValue(value)
+        override fun containsValue(value: MutableMap<Char, Conversion>): Boolean = conversions.containsValue(value)
 
-        override fun get(key: Char?): MutableMap<Char, IConversion>? = conversions[key]
+        override fun get(key: Char?): MutableMap<Char, Conversion>? = conversions[key]
 
         override fun isEmpty(): Boolean = conversions.isEmpty()
     }
