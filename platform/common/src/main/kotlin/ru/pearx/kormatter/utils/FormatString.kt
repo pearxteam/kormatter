@@ -20,8 +20,7 @@ data class FormatString(
         val conversion: Char,
         val start: Int,
         val endInclusive: Int
-)
-{
+) {
     override fun toString(): String
     {
         return StringBuilder().apply {

@@ -5,10 +5,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils.internal
+package ru.pearx.kormatter.formatter
 
 
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-internal fun MatchGroup?.orEmpty(): String = this?.value.orEmpty()
+fun Formatter.format(str: String, vararg args: Any?) = format(str, StringBuilder(), args).toString()
+fun String.format(vararg args: Any?) = DefaultFormatter.format(this, *args)

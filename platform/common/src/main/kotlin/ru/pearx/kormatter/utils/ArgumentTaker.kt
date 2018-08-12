@@ -7,16 +7,18 @@
 
 package ru.pearx.kormatter.utils
 
-import ru.pearx.kormatter.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.exceptions.NoSuchArgumentException
+import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
 
 
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-class ArgumentTaker internal constructor(private val holder: ArgumentIndexHolder, private val args: Array<out Any?>)
-{
+class ArgumentTaker internal constructor(
+        private val holder: ArgumentIndexHolder,
+        private val args: Array<out Any?>
+) {
     internal lateinit var formatString: FormatString
 
     fun take(): Any?

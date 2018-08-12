@@ -5,9 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter
+package ru.pearx.kormatter.utils
 
 /*
- * Created by mrAppleXZ on 08.07.18 14:43
+ * Created by mrAppleXZ on 12.08.18.
  */
-fun String.format(vararg args: Any?) = Formatter.format(this, *args)
+typealias FlagContainer = List<Char>
+typealias MutableFlagContainer = MutableList<Char>

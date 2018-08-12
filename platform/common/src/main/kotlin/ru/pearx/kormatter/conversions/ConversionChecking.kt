@@ -7,11 +7,11 @@
 
 package ru.pearx.kormatter.conversions
 
-import ru.pearx.kormatter.FLAG_LEFT_JUSTIFIED
-import ru.pearx.kormatter.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.exceptions.IllegalFlagsException
 import ru.pearx.kormatter.exceptions.IllegalPrecisionException
 import ru.pearx.kormatter.exceptions.IllegalWidthException
+import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
+import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.utils.FormatString
 import ru.pearx.kormatter.utils.PartDependency
 
