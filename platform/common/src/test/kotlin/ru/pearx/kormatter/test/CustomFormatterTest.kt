@@ -8,10 +8,12 @@
 package ru.pearx.kormatter.test
 
 import ru.pearx.kormatter.conversions.conversion
+import ru.pearx.kormatter.exceptions.IllegalFlagsException
 import ru.pearx.kormatter.formatter.builder.buildFormatter
 import ru.pearx.kormatter.formatter.format
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 
 /*
@@ -20,7 +22,7 @@ import kotlin.test.assertEquals
 class CustomFormatterTest
 {
     @Test
-    fun testCustomFormatter()
+    fun testCustomConversions()
     {
         val form = buildFormatter {
             conversions {
@@ -37,5 +39,27 @@ class CustomFormatterTest
         }
         assertEquals("Test", form.format("%s", "Test"))
         assertEquals("FuZzY StRiNg YaY", form.format("%g %g %g", "FUzzY", "STRING", "yay"))
+    }
+
+    @Test
+    fun testCustomFlags()
+    {
+        val flagCaseSwitch = '!'
+        val form = buildFormatter {
+            conversions {
+                'q'(conversion(supportedFlags = charArrayOf(flagCaseSwitch))
+                { str, arg ->
+                    arg.toString().run { if(str.flags.contains(flagCaseSwitch)) toUpperCase() else toLowerCase() }
+                })
+            }
+            flags {
+                +flagCaseSwitch
+            }
+        }
+        assertEquals("Test", form.format("%s", "Test"))
+        assertFailsWith<IllegalFlagsException> { form.format("%!s", "Test") }
+        assertEquals("TEATIME", form.format("%!q", "teaTIME"))
+        assertEquals("teatime", form.format("%q", "TEAtime"))
+        assertFailsWith<IllegalFlagsException> { form.format("%#q", "Test") }
     }
 }
