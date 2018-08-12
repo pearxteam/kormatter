@@ -16,7 +16,7 @@ build:
   - ./gradlew assemble
   artifacts:
     paths:
-    - build/libs/*.jar
+    - platform/*/build/libs/*
     expire_in: 1 week
   only:
   - master
