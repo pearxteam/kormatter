@@ -15,7 +15,7 @@ cache:
 build:
   stage: build
   script:
-  - ./gradlew assemble
+  - ./gradlew clean assemble
   artifacts:
     paths:
     - platform/*/build/libs/*
@@ -27,3 +27,5 @@ test:
   stage: test
   script:
   - ./gradlew check
+  - ./gradlew jacocoTestReport
+  - echo "Test Coverage: $(grep -oP "Total.*?\K\d{1,3}%" platform/jvm/build/reports/jacoco/test/html/index.html)"
