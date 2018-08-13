@@ -1,4 +1,4 @@
-stages:
+stages:   #TODO: move to Docker?
 - build
 - test
 
@@ -9,6 +9,8 @@ cache:
   paths:
   - .gradle/wrapper
   - .gradle/caches
+  - platform/*/.gradle
+  - platform/js/node_modules
 
 build:
   stage: build
@@ -25,6 +27,3 @@ test:
   stage: test
   script:
   - ./gradlew check
-
-after_script:
-- echo "Finished!"

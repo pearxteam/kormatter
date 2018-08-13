@@ -7,28 +7,31 @@
 
 package ru.pearx.kormatter.utils.internal
 
-import ru.pearx.kormatter.conversions.Conversion
+import ru.pearx.kormatter.utils.ConversionMap
+import ru.pearx.kormatter.utils.FlagSet
 
 
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-internal fun createFormatStringRegex(flags: List<Char>, conversions: Map<Char?, Map<Char, Conversion>>): Regex
+internal fun createFormatStringRegex(flags: FlagSet, conversions: ConversionMap): Regex
 {
     return Regex(StringBuilder().apply {
-        append("""%(?:(?<argumentIndex>\d+)\$)?(?<flags>[""")
+        append("""%(?:(\d+)\$)?([""")
         append(Regex.escape(String(flags.toCharArray())))
-        append("""]+)?(?<width>\d+)?(?:\.(?<precision>\d+))?(?<prefix>""")
+        append("""]+)?(\d+)?(?:\.(\d+))?(""")
 
         val sbPrefixes = StringBuilder(conversions.size)
         for (ch in conversions.keys)
-            if (ch != null)
-                sbPrefixes.append(ch)
+            if(ch.prefix != null)
+                sbPrefixes.append(ch.prefix)
         if (!sbPrefixes.isEmpty())
         {
-            append("[").append(Regex.escape(sbPrefixes.toString())).append("]")
+            append("[")
+            append(Regex.escape(sbPrefixes.toString()))
+            append("]")
         }
 
-        append(""")?(?<conversion>.)""")
+        append(""")?(.)""")
     }.toString())
 }

@@ -5,10 +5,15 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.utils.internal
+package ru.pearx.kormatter.utils
 
+import ru.pearx.kormatter.conversions.Conversion
 
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-internal fun MatchGroup?.orEmpty(): String = this?.value.orEmpty()
+typealias FlagSet = Set<Char>
+typealias MutableFlagSet = MutableSet<Char>
+
+typealias ConversionMap = Map<ConversionKey, Conversion>
+typealias MutableConversionMap = MutableMap<ConversionKey, Conversion>

@@ -9,6 +9,7 @@ package ru.pearx.kormatter.test
 
 import ru.pearx.kormatter.conversions.conversion
 import ru.pearx.kormatter.exceptions.IllegalFlagsException
+import ru.pearx.kormatter.formatter.DefaultFormatter
 import ru.pearx.kormatter.formatter.builder.buildFormatter
 import ru.pearx.kormatter.formatter.format
 import kotlin.test.Test
@@ -25,9 +26,10 @@ class CustomFormatterTest
     fun testCustomConversions()
     {
         val form = buildFormatter {
+            takeFrom(DefaultFormatter)
             conversions {
                 'g'(conversion
-                { str, arg, to ->
+                { _, arg, to ->
                     var n = 0
                     for (ch in arg.toString())
                     {
@@ -46,6 +48,7 @@ class CustomFormatterTest
     {
         val flagCaseSwitch = '!'
         val form = buildFormatter {
+            takeFrom(DefaultFormatter)
             conversions {
                 'q'(conversion(supportedFlags = charArrayOf(flagCaseSwitch))
                 { str, arg ->

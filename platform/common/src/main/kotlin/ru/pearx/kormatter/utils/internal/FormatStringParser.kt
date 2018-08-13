@@ -7,6 +7,7 @@
 
 package ru.pearx.kormatter.utils.internal
 
+import ru.pearx.kormatter.utils.ConversionKey
 import ru.pearx.kormatter.utils.FormatString
 
 
@@ -24,15 +25,13 @@ internal fun parseFormatString(format: String, regex: Regex): Iterator<FormatStr
         override fun next(): FormatString
         {
             val nxt = next ?: throw NoSuchElementException()
-            val groups = nxt.groups as MatchNamedGroupCollection
 
             val result = FormatString(
-                    argumentIndex = groups["argumentIndex"].orEmpty().toIntOrNull(),
-                    flags = groups["flags"].orEmpty(),
-                    width = groups["width"].orEmpty().toIntOrNull(),
-                    precision = groups["precision"].orEmpty().toIntOrNull(),
-                    prefix = groups["prefix"].orEmpty().singleOrNull(),
-                    conversion = groups["conversion"].orEmpty().single(),
+                    argumentIndex = nxt.groupValues[1].toIntOrNull(),
+                    flags = nxt.groupValues[2],
+                    width = nxt.groupValues[3].toIntOrNull(),
+                    precision = nxt.groupValues[4].toIntOrNull(),
+                    conversion = ConversionKey(nxt.groupValues[5].singleOrNull(), nxt.groupValues[6].single()),
                     start = nxt.range.start,
                     endInclusive = nxt.range.endInclusive
             )

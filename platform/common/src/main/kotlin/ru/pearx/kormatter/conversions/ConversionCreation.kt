@@ -19,7 +19,7 @@ fun conversion(replacement: String, widthDependency: PartDependency = PartDepend
     return ConversionConstant(replacement, widthDependency, precisionDependency)
 }
 
-fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, executor: (str: FormatString, arg: Any?, to: Appendable) -> Unit) : Conversion
+inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any?, to: Appendable) -> Unit) : Conversion
 {
     return object : ConversionExecuting(supportedFlags, widthDependency, precisionDependency)
     {
@@ -30,7 +30,7 @@ fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartD
     }
 }
 
-fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, executor: (str: FormatString, arg: Any?) -> String) : Conversion
+inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any?) -> String) : Conversion
 {
     return object : ConversionExecuting(supportedFlags, widthDependency, precisionDependency)
     {
@@ -41,7 +41,7 @@ fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartD
     }
 }
 
-fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, executor: (str: FormatString, arg: Any, to: Appendable) -> Unit) : Conversion
+inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any, to: Appendable) -> Unit) : Conversion
 {
     return object : ConversionExecutingNotNull(supportedFlags, widthDependency, precisionDependency)
     {
@@ -52,7 +52,7 @@ fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency
     }
 }
 
-fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, executor: (str: FormatString, arg: Any) -> String) : Conversion
+inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any) -> String) : Conversion
 {
     return object : ConversionExecutingNotNull(supportedFlags, widthDependency, precisionDependency)
     {

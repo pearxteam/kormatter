@@ -8,9 +8,14 @@
 package ru.pearx.kormatter.formatter.builder
 
 import ru.pearx.kormatter.conversions.Conversion
+import ru.pearx.kormatter.conversions.UppercaseConversion
+import ru.pearx.kormatter.exceptions.ConversionAlreadyExistsException
+import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
+import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.formatter.Formatter
-import ru.pearx.kormatter.utils.MutableFlagContainer
-import ru.pearx.kormatter.utils.container.MutableConversionContainer
+import ru.pearx.kormatter.utils.ConversionKey
+import ru.pearx.kormatter.utils.MutableConversionMap
+import ru.pearx.kormatter.utils.MutableFlagSet
 
 /*
  * Created by mrAppleXZ on 12.08.18.
@@ -22,51 +27,85 @@ annotation class FormatterDsl
 @FormatterDsl
 class FormatterBuilder internal constructor()
 {
-    private val formatter = Formatter()
+    private val conversions: MutableConversionMap = hashMapOf()
+    private val flags: MutableFlagSet = hashSetOf(FLAG_REUSE_ARGUMENT_INDEX, FLAG_LEFT_JUSTIFIED)
+
+    fun takeFrom(formatter: Formatter)
+    {
+        flags.takeFrom(formatter)
+        conversions.takeFrom(formatter)
+    }
 
     fun conversions(init: ConversionsScope.() -> Unit)
     {
-        val scope = ConversionsScope(formatter.conversionsMutable)
+        val scope = ConversionsScope(conversions)
         scope.init()
     }
 
     fun flags(init: FlagsScope.() -> Unit)
     {
-        val scope = FlagsScope(formatter.flagsMutable)
+        val scope = FlagsScope(flags)
         scope.init()
     }
 
-    fun build(): Formatter = formatter
+    fun createFormatter() = Formatter(conversions, flags)
 }
 
 @FormatterDsl
-class ConversionsScope internal constructor(val conversions: MutableConversionContainer)
+class ConversionsScope internal constructor(val conversions: MutableConversionMap)
 {
-    operator fun Char.invoke(toPut: Conversion, uppercaseVariant: Boolean = true)
+    fun takeFrom(formatter: Formatter)
     {
-        conversions.add(this, toPut, uppercaseVariant)
+        conversions.takeFrom(formatter)
     }
 
-    operator fun String.invoke(toPut: Conversion, uppercaseVariant: Boolean = true)
+    operator fun Char.invoke(conversion: Conversion, uppercaseVariant: Boolean = true)
     {
-        conversions.add(this[0], this[1], toPut, uppercaseVariant)
+        put(ConversionKey(this), conversion, uppercaseVariant)
+    }
+
+    operator fun String.invoke(conversion: Conversion, uppercaseVariant: Boolean = true)
+    {
+        val key = when (this.length)
+        {
+            1 -> ConversionKey(this[0])
+            2 -> ConversionKey(this[0], this[1])
+            else -> throw IllegalArgumentException("$this: The conversion key string should be 1 or 2 characters long.")
+        }
+        put(key, conversion, uppercaseVariant)
+    }
+
+    private fun put(key: ConversionKey, conversion: Conversion, uppercaseVariant: Boolean)
+    {
+        val prev = conversions[key]
+        if(prev != null)
+            throw ConversionAlreadyExistsException(key, prev)
+        conversions[key] = conversion
+        if(uppercaseVariant)
+            put(key.withConversion(key.conversion.toUpperCase()), UppercaseConversion(conversion), false)
     }
 }
 
 @FormatterDsl
-class FlagsScope internal constructor(val flags: MutableFlagContainer)
+class FlagsScope internal constructor(val flags: MutableFlagSet)
 {
+    fun takeFrom(formatter: Formatter)
+    {
+        flags.takeFrom(formatter)
+    }
+
     operator fun Char.unaryPlus()
     {
         flags.add(this)
     }
 }
 
-fun buildFormatter(withDefaults: Boolean = true, init: FormatterBuilder.() -> Unit): Formatter
+fun buildFormatter(init: FormatterBuilder.() -> Unit): Formatter
 {
     val bld = FormatterBuilder()
-    if(withDefaults)
-        bld.addDefaults()
     bld.init()
-    return bld.build()
+    return bld.createFormatter()
 }
+
+private fun MutableConversionMap.takeFrom(formatter: Formatter) = putAll(formatter.conversions)
+private fun MutableFlagSet.takeFrom(formatter: Formatter) = addAll(formatter.flags)

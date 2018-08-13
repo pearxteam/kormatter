@@ -16,8 +16,7 @@ data class FormatString(
         val flags: String,
         val width: Int?,
         val precision: Int?,
-        val prefix: Char?,
-        val conversion: Char,
+        val conversion: ConversionKey,
         val start: Int,
         val endInclusive: Int
 ) {
@@ -31,8 +30,6 @@ data class FormatString(
                 append(width)
             if (precision != null)
                 append(".").append(precision)
-            if (prefix != null)
-                append(prefix)
             append(conversion)
         }.toString()
     }

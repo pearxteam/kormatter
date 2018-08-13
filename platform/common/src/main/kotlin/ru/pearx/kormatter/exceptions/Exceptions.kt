@@ -8,6 +8,7 @@
 package ru.pearx.kormatter.exceptions
 
 import ru.pearx.kormatter.conversions.Conversion
+import ru.pearx.kormatter.utils.ConversionKey
 import ru.pearx.kormatter.utils.FormatString
 import ru.pearx.kormatter.utils.PartDependency
 
@@ -22,13 +23,13 @@ class IllegalWidthException(formatString: FormatString, dependency: PartDependen
 class IllegalConversionException(formatString: FormatString) : FormatStringException(formatString)
 {
     override val localMessage: String
-        get() = "Cannot find a conversion '${formatString.prefix ?: ""}${formatString.conversion}'."
+        get() = "Cannot find a conversion '${formatString.conversion}'."
 }
 
-class ConversionAlreadyExistsException(val prefix: Char?, val conversion: Char, val existing: Conversion) : RuntimeException()
+class ConversionAlreadyExistsException(val key: ConversionKey, val existing: Conversion) : RuntimeException()
 {
     override val message: String?
-        get() = "The conversion of character '${prefix ?: ""}$conversion' already exists: $existing!"
+        get() = "The conversion '$key' already exists: $existing!"
 }
 
 class IllegalFormatCodePointException(

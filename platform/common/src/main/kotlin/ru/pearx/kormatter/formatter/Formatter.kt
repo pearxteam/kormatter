@@ -9,13 +9,9 @@ package ru.pearx.kormatter.formatter
 
 import ru.pearx.kormatter.exceptions.IllegalConversionException
 import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
-import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.utils.ArgumentTaker
-import ru.pearx.kormatter.utils.FlagContainer
-import ru.pearx.kormatter.utils.MutableFlagContainer
-import ru.pearx.kormatter.utils.container.ConversionContainer
-import ru.pearx.kormatter.utils.container.MutableConversionContainer
-import ru.pearx.kormatter.utils.container.MutableConversionContainerImpl
+import ru.pearx.kormatter.utils.ConversionMap
+import ru.pearx.kormatter.utils.FlagSet
 import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
 import ru.pearx.kormatter.utils.internal.createFormatStringRegex
 import ru.pearx.kormatter.utils.internal.parseFormatString
@@ -24,16 +20,11 @@ import ru.pearx.kormatter.utils.internal.parseFormatString
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-class Formatter internal constructor()
+class Formatter internal constructor(val conversions: ConversionMap, val flags: FlagSet)
 {
     private val regex: Regex by lazy { createFormatStringRegex(flags, conversions) }
-    internal val conversionsMutable: MutableConversionContainer = MutableConversionContainerImpl()
-    internal val flagsMutable: MutableFlagContainer = arrayListOf(FLAG_REUSE_ARGUMENT_INDEX, FLAG_LEFT_JUSTIFIED)
 
-    val conversions: ConversionContainer = conversionsMutable
-    val flags: FlagContainer = flagsMutable
-
-    fun <T : Appendable> format(format: String, to: T, args: Array<out Any?>): T
+    fun <T : Appendable> formatTo(to: T, format: String, args: Array<out Any?>): T
     {
         return to.apply {
             val taker = ArgumentTaker(ArgumentIndexHolder(-1, -1), args)
@@ -45,7 +36,7 @@ class Formatter internal constructor()
                 textStart = str.endInclusive + 1
 
                 taker.formatString = str
-                val conversion = conversions[str.prefix, str.conversion] ?: throw IllegalConversionException(str)
+                val conversion = conversions[str.conversion] ?: throw IllegalConversionException(str)
                 conversion.check(str)
 
                 if (str.width != null)

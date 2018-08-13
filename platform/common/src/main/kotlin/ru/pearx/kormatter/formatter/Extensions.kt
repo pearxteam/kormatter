@@ -11,5 +11,5 @@ package ru.pearx.kormatter.formatter
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-fun Formatter.format(str: String, vararg args: Any?) = format(str, StringBuilder(), args).toString()
+fun Formatter.format(str: String, vararg args: Any?) = formatTo(StringBuilder(), str, args).toString()
 fun String.format(vararg args: Any?) = DefaultFormatter.format(this, *args)

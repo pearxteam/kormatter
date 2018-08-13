@@ -15,7 +15,6 @@ import ru.pearx.kormatter.utils.PartDependency
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-
 internal class ConversionConstant(
         private val replacement: String,
         override val widthDependency: PartDependency,
@@ -31,6 +30,7 @@ internal class ConversionConstant(
     }
 }
 
+@PublishedApi
 internal abstract class ConversionExecuting(
         private val supportedFlags: CharArray,
         override val widthDependency: PartDependency,
@@ -43,6 +43,7 @@ internal abstract class ConversionExecuting(
     override fun checkFlag(str: FormatString, flag: Char): Boolean = supportedFlags.contains(flag)
 }
 
+@PublishedApi
 internal abstract class ConversionExecutingNotNull(
         private val supportedFlags: CharArray,
         override val widthDependency: PartDependency,
