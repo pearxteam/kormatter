@@ -9,19 +9,19 @@ package ru.pearx.kormatter.conversions
 
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 
 /*
  * Created by mrAppleXZ on 12.08.18.
  */
-fun conversion(replacement: String, widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL) : Conversion
+fun conversion(replacement: String, widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD) : Conversion
 {
-    return ConversionConstant(replacement, widthDependency, precisionDependency)
+    return ConversionConstant(replacement, widthAction, precisionAction)
 }
 
-inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any?, to: Appendable) -> Unit) : Conversion
+inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any?, to: Appendable) -> Unit) : Conversion
 {
-    return object : ConversionExecuting(supportedFlags, widthDependency, precisionDependency)
+    return object : ConversionExecuting(supportedFlags, widthAction, precisionAction)
     {
         override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
         {
@@ -30,9 +30,9 @@ inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency
     }
 }
 
-inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any?) -> String) : Conversion
+inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any?) -> String) : Conversion
 {
-    return object : ConversionExecuting(supportedFlags, widthDependency, precisionDependency)
+    return object : ConversionExecuting(supportedFlags, widthAction, precisionAction)
     {
         override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
         {
@@ -41,9 +41,9 @@ inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthDependency
     }
 }
 
-inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any, to: Appendable) -> Unit) : Conversion
+inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any, to: Appendable) -> Unit) : Conversion
 {
-    return object : ConversionExecutingNotNull(supportedFlags, widthDependency, precisionDependency)
+    return object : ConversionExecutingNotNull(supportedFlags, widthAction, precisionAction)
     {
         override fun format(str: FormatString, arg: Any, to: Appendable)
         {
@@ -52,9 +52,9 @@ inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDep
     }
 }
 
-inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthDependency: PartDependency = PartDependency.OPTIONAL, precisionDependency: PartDependency = PartDependency.OPTIONAL, crossinline executor: (str: FormatString, arg: Any) -> String) : Conversion
+inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any) -> String) : Conversion
 {
-    return object : ConversionExecutingNotNull(supportedFlags, widthDependency, precisionDependency)
+    return object : ConversionExecutingNotNull(supportedFlags, widthAction, precisionAction)
     {
         override fun format(str: FormatString, arg: Any, to: Appendable)
         {

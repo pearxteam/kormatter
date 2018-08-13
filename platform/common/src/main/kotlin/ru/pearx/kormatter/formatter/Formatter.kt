@@ -12,8 +12,10 @@ import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.ConversionMap
 import ru.pearx.kormatter.utils.FlagSet
+import ru.pearx.kormatter.utils.PartAction
 import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
 import ru.pearx.kormatter.utils.internal.createFormatStringRegex
+import ru.pearx.kormatter.utils.internal.lengthSequence
 import ru.pearx.kormatter.utils.internal.parseFormatString
 
 
@@ -39,25 +41,40 @@ class Formatter internal constructor(val conversions: ConversionMap, val flags: 
                 val conversion = conversions[str.conversion] ?: throw IllegalConversionException(str)
                 conversion.check(str)
 
-                if (str.width != null)
+                val fWidth = conversion.widthAction == PartAction.STANDARD && str.width != null
+                val fPrecision = conversion.precisionAction == PartAction.STANDARD && str.precision != null
+                if (fWidth || fPrecision) // Apply standard width or precision post-processing
                 {
-                    val formatted = StringBuilder().apply { conversion.format(str, taker, this) }
+                    var formatted: CharSequence = StringBuilder().apply { conversion.format(str, taker, this) }
 
-                    val len = str.width - formatted.length
-                    if (len > 0)
+                    if(fPrecision) // Cut $formatted using precision
                     {
-                        val leftJustify = FLAG_LEFT_JUSTIFIED in str.flags
-                        if (leftJustify)
-                            append(formatted)
-                        for (n in 1..len)
-                            append(' ')
-                        if (!leftJustify)
-                            append(formatted)
+                        if(formatted.length - str.precision!! > 0)
+                        {
+                            formatted = formatted.lengthSequence(str.precision) //todo: Replace it with formatted.setLength(cut) when this method will come to the stdlib (ha-ha, I'm so naive).
+                        }
                     }
-                    else
-                        append(formatted)
+
+                    if(fWidth) // Print $formatted with specified width
+                    {
+                        val len = str.width!! - formatted.length
+                        if (len > 0)
+                        {
+                            val leftJustify = FLAG_LEFT_JUSTIFIED in str.flags
+                            if (leftJustify)
+                                append(formatted)
+                            for (n in 1..len)
+                                append(' ')
+                            if (!leftJustify)
+                                append(formatted)
+                            continue
+                        }
+                    }
+
+                    // Print $formatted
+                    append(formatted)
                 }
-                else
+                else // Format the conversion directly
                     conversion.format(str, taker, this)
             }
             append(format, textStart, format.length)

@@ -9,7 +9,7 @@ package ru.pearx.kormatter.conversions
 
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 
 
 /*
@@ -17,9 +17,9 @@ import ru.pearx.kormatter.utils.PartDependency
  */
 interface Conversion
 {
-    val widthDependency: PartDependency
+    val widthAction: PartAction
 
-    val precisionDependency: PartDependency
+    val precisionAction: PartAction
 
     val canTakeArguments: Boolean
 

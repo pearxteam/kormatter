@@ -11,7 +11,7 @@ import ru.pearx.kormatter.conversions.conversion
 import ru.pearx.kormatter.conversions.conversionNotNull
 import ru.pearx.kormatter.flags.*
 import ru.pearx.kormatter.formatter.builder.buildFormatter
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 import ru.pearx.kormatter.utils.internal.lineSeparator
 
 
@@ -20,9 +20,9 @@ import ru.pearx.kormatter.utils.internal.lineSeparator
  */
 val DefaultFormatter = buildFormatter {
     conversions {
-        '%'(conversion("%", precisionDependency = PartDependency.FORBIDDEN), false)
+        '%'(conversion("%", precisionAction = PartAction.FORBIDDEN), false)
 
-        'n'(conversion(lineSeparator, PartDependency.FORBIDDEN, PartDependency.FORBIDDEN), false)
+        'n'(conversion(lineSeparator, PartAction.FORBIDDEN, PartAction.FORBIDDEN), false)
 
         'b'(conversion
         { _, arg ->

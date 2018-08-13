@@ -9,7 +9,7 @@ package ru.pearx.kormatter.conversions
 
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 
 
 /*
@@ -17,8 +17,8 @@ import ru.pearx.kormatter.utils.PartDependency
  */
 internal class ConversionConstant(
         private val replacement: String,
-        override val widthDependency: PartDependency,
-        override val precisionDependency: PartDependency
+        override val widthAction: PartAction,
+        override val precisionAction: PartAction
 ) : ConversionChecking
 {
     override val canTakeArguments: Boolean
@@ -33,8 +33,8 @@ internal class ConversionConstant(
 @PublishedApi
 internal abstract class ConversionExecuting(
         private val supportedFlags: CharArray,
-        override val widthDependency: PartDependency,
-        override val precisionDependency: PartDependency
+        override val widthAction: PartAction,
+        override val precisionAction: PartAction
 ) : ConversionChecking
 {
     override val canTakeArguments: Boolean
@@ -46,8 +46,8 @@ internal abstract class ConversionExecuting(
 @PublishedApi
 internal abstract class ConversionExecutingNotNull(
         private val supportedFlags: CharArray,
-        override val widthDependency: PartDependency,
-        override val precisionDependency: PartDependency
+        override val widthAction: PartAction,
+        override val precisionAction: PartAction
 ) : ConversionChecking
 {
     override val canTakeArguments: Boolean

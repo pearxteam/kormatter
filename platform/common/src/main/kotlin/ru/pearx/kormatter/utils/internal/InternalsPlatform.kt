@@ -12,3 +12,5 @@ package ru.pearx.kormatter.utils.internal
  * Created by mrAppleXZ on 07.08.18.
  */
 internal expect val lineSeparator: String
+
+internal expect fun CharSequence.lengthSequence(length: Int): CharSequence

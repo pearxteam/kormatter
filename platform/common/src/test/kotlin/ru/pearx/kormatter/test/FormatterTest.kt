@@ -116,4 +116,17 @@ class FormatterTest
         assertEquals("s", ConversionKey(null, 's').toString())
         assertEquals("ts", ConversionKey('t', 's').toString())
     }
+
+    @Test
+    fun testPrecision()
+    {
+        assertEquals("Super", "%.5s".format("Super String 123"))
+    }
+
+    @Test
+    fun testPrecisionWithWidth()
+    {
+        assertEquals("     Super", "%10.5s".format("Super String 123"))
+        assertEquals("Super Stri", "%10.10s".format("Super String 123"))
+    }
 }

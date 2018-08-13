@@ -13,7 +13,7 @@ import ru.pearx.kormatter.exceptions.IllegalWidthException
 import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
 import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 
 
 /*
@@ -23,13 +23,13 @@ interface ConversionChecking : Conversion
 {
     override fun check(str: FormatString)
     {
-        if(!widthDependency.check(str.width))
-            throw IllegalWidthException(str, widthDependency)
-        if(!precisionDependency.check(str.precision))
-            throw IllegalPrecisionException(str, precisionDependency)
+        if(widthAction == PartAction.FORBIDDEN && str.width != null)
+            throw IllegalWidthException(str)
+        if(precisionAction == PartAction.FORBIDDEN && str.precision != null)
+            throw IllegalPrecisionException(str)
         for (flag in str.flags)
         {
-            if (flag == FLAG_LEFT_JUSTIFIED && widthDependency != PartDependency.FORBIDDEN)
+            if (flag == FLAG_LEFT_JUSTIFIED && widthAction != PartAction.FORBIDDEN)
                 continue
             if (flag == FLAG_REUSE_ARGUMENT_INDEX && canTakeArguments)
                 continue

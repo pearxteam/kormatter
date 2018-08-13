@@ -12,3 +12,13 @@ package ru.pearx.kormatter.utils.internal
  */
 internal actual val lineSeparator: String
     get() = System.lineSeparator()
+
+internal actual fun CharSequence.lengthSequence(length: Int): CharSequence
+{
+    if(this is StringBuilder)
+    {
+        setLength(length)
+        return this
+    }
+    return subSequence(0, length)
+}

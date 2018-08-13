@@ -10,15 +10,42 @@ package ru.pearx.kormatter.exceptions
 import ru.pearx.kormatter.conversions.Conversion
 import ru.pearx.kormatter.utils.ConversionKey
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
 
 
 /*
  * Created by mrAppleXZ on 02.08.18.
  */
-class IllegalPrecisionException(formatString: FormatString, dependency: PartDependency) : PartDependencyException(formatString, dependency, "precision")
+abstract class FormatStringException : RuntimeException
+{
+    protected abstract val localMessage: String
+    val formatString: FormatString
 
-class IllegalWidthException(formatString: FormatString, dependency: PartDependency) : PartDependencyException(formatString, dependency, "width")
+    constructor(formatString: FormatString) : super()
+    {
+        this.formatString = formatString
+    }
+
+    constructor(formatString: FormatString, cause: Throwable?) : super(cause)
+    {
+        this.formatString = formatString
+    }
+
+    override val message: String?
+        get() = "$formatString: $localMessage"
+}
+
+open class IllegalPartException(formatString: FormatString, private val name: String) : FormatStringException(formatString)
+{
+    override val localMessage: String
+        get()
+        {
+            return "The format string shouldn't have the $name."
+        }
+}
+
+class IllegalPrecisionException(formatString: FormatString) : IllegalPartException(formatString, "precision")
+
+class IllegalWidthException(formatString: FormatString) : IllegalPartException(formatString, "width")
 
 class IllegalConversionException(formatString: FormatString) : FormatStringException(formatString)
 {
@@ -32,7 +59,24 @@ class ConversionAlreadyExistsException(val key: ConversionKey, val existing: Con
         get() = "The conversion '$key' already exists: $existing!"
 }
 
+open class IllegalFormatArgumentException(
+        formatString: FormatString,
+        val argument: Any?,
+        override val localMessage: String = "'$argument' is not a valid argument for this conversion."
+) : FormatStringException(formatString)
+
 class IllegalFormatCodePointException(
         formatString: FormatString,
         val codePoint: Int
 ) : IllegalFormatArgumentException(formatString, "Illegal code point: $codePoint!")
+
+open class IllegalFlagsException(
+        formatString: FormatString,
+        override val localMessage: String
+) : FormatStringException(formatString)
+
+open class NoSuchArgumentException(
+        formatString: FormatString,
+        override val localMessage: String,
+        cause: Throwable?
+) : FormatStringException(formatString, cause)

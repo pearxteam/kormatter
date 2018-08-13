@@ -11,14 +11,9 @@ package ru.pearx.kormatter.utils
 /*
  * Created by mrAppleXZ on 06.08.18.
  */
-enum class PartDependency(val shouldPartExist: Boolean?)
+enum class PartAction
 {
-    REQUIRED(true),
-    OPTIONAL(null),
-    FORBIDDEN(false);
-
-    fun check(value: Any?): Boolean
-    {
-        return (shouldPartExist == null) || (shouldPartExist == (value != null))
-    }
+    CUSTOM,
+    STANDARD,
+    FORBIDDEN;
 }

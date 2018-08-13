@@ -9,7 +9,7 @@ package ru.pearx.kormatter.conversions
 
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.FormatString
-import ru.pearx.kormatter.utils.PartDependency
+import ru.pearx.kormatter.utils.PartAction
 
 
 /*
@@ -17,11 +17,11 @@ import ru.pearx.kormatter.utils.PartDependency
  */
 class UppercaseConversion(private val baseConversion: Conversion) : Conversion
 {
-    override val widthDependency: PartDependency
-        get() = baseConversion.widthDependency
+    override val widthAction: PartAction
+        get() = baseConversion.widthAction
 
-    override val precisionDependency: PartDependency
-        get() = baseConversion.precisionDependency
+    override val precisionAction: PartAction
+        get() = baseConversion.precisionAction
 
     override val canTakeArguments: Boolean
         get() = baseConversion.canTakeArguments
