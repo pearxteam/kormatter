@@ -28,4 +28,5 @@ test:
   script:
   - ./gradlew check
   - ./gradlew jacocoTestReport
-  - echo "Test Coverage: $(grep -oP "Total.*?\K\d{1,3}%" platform/jvm/build/reports/jacoco/test/html/index.html)"
+  - >
+    echo "Test Coverage: $(grep -oP 'Total.*?\K\d{1,3}%' platform/jvm/build/reports/jacoco/test/html/index.html)"
