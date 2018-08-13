@@ -39,7 +39,7 @@ class ArgumentTaker internal constructor(
                 }
             }
             //reuse previous argument index
-            formatString.flags.contains(FLAG_REUSE_ARGUMENT_INDEX) ->
+            FLAG_REUSE_ARGUMENT_INDEX in formatString.flags ->
             {
                 try
                 {

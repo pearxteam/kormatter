@@ -40,7 +40,7 @@ internal abstract class ConversionExecuting(
     override val canTakeArguments: Boolean
         get() = true
 
-    override fun checkFlag(str: FormatString, flag: Char): Boolean = supportedFlags.contains(flag)
+    override fun checkFlag(str: FormatString, flag: Char): Boolean = flag in supportedFlags
 }
 
 @PublishedApi
@@ -53,7 +53,7 @@ internal abstract class ConversionExecutingNotNull(
     override val canTakeArguments: Boolean
         get() = true
 
-    override fun checkFlag(str: FormatString, flag: Char): Boolean = supportedFlags.contains(flag)
+    override fun checkFlag(str: FormatString, flag: Char): Boolean = flag in supportedFlags
 
     override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
     {

@@ -56,7 +56,7 @@ class FormatterTest
     fun testNewline()
     {
         val formatted = "Some%nText%nYay".format()
-        assertTrue { arrayOf("Some\nText\nYay", "Some\rText\rYay", "Some\r\nText\r\nYay").contains(formatted) }
+        assertTrue { formatted in arrayOf("Some\nText\nYay", "Some\rText\rYay", "Some\r\nText\r\nYay") }
     }
 
     @Test

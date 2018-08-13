@@ -46,7 +46,7 @@ class Formatter internal constructor(val conversions: ConversionMap, val flags: 
                     val len = str.width - formatted.length
                     if (len > 0)
                     {
-                        val leftJustify = str.flags.contains(FLAG_LEFT_JUSTIFIED)
+                        val leftJustify = FLAG_LEFT_JUSTIFIED in str.flags
                         if (leftJustify)
                             append(formatted)
                         for (n in 1..len)

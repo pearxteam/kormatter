@@ -52,7 +52,7 @@ class CustomFormatterTest
             conversions {
                 'q'(conversion(supportedFlags = charArrayOf(flagCaseSwitch))
                 { str, arg ->
-                    arg.toString().run { if(str.flags.contains(flagCaseSwitch)) toUpperCase() else toLowerCase() }
+                    arg.toString().run { if(flagCaseSwitch in str.flags) toUpperCase() else toLowerCase() }
                 })
             }
             flags {
