@@ -9,6 +9,7 @@ package ru.pearx.kormatter.test
 
 import ru.pearx.kormatter.exceptions.IllegalConversionException
 import ru.pearx.kormatter.formatter.format
+import ru.pearx.kormatter.utils.ConversionKey
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -65,6 +66,7 @@ class FormatterTest
         assertEquals("         %", "%10%".format())
         assertEquals("%         ", "%-10%".format())
         assertEquals("      true", "%10b".format(true))
+        assertEquals("TooLongString", "%10s".format("TooLongString"))
     }
 
     @Test
@@ -105,5 +107,13 @@ class FormatterTest
         assertFailsWith<IllegalConversionException> { "Hello, %ы".format() }
         assertFailsWith<IllegalConversionException> { "Tsss, %2$12p".format() }
         assertFailsWith<IllegalConversionException> { "Tsss, %2$<12.420q".format() }
+    }
+
+    @Test
+    fun testConversionKeyToString()
+    {
+        assertEquals("s", ConversionKey('s').toString())
+        assertEquals("s", ConversionKey(null, 's').toString())
+        assertEquals("ts", ConversionKey('t', 's').toString())
     }
 }
