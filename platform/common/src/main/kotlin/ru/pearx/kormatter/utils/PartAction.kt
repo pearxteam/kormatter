@@ -15,5 +15,5 @@ enum class PartAction
 {
     CUSTOM,
     STANDARD,
-    FORBIDDEN;
+    FORBIDDEN
 }

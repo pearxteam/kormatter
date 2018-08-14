@@ -23,7 +23,7 @@ interface Conversion
 
     val canTakeArguments: Boolean
 
-    fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
+    fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
 
     fun check(str: FormatString)
 }

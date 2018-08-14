@@ -45,7 +45,7 @@ class Formatter internal constructor(val conversions: ConversionMap, val flags: 
                 val fPrecision = conversion.precisionAction == PartAction.STANDARD && str.precision != null
                 if (fWidth || fPrecision) // Apply standard width or precision post-processing
                 {
-                    var formatted: CharSequence = StringBuilder().apply { conversion.format(str, taker, this) }
+                    var formatted: CharSequence = StringBuilder().apply { conversion.formatTo(this, str, taker) }
 
                     if(fPrecision) // Cut $formatted using precision
                     {
@@ -75,7 +75,7 @@ class Formatter internal constructor(val conversions: ConversionMap, val flags: 
                     append(formatted)
                 }
                 else // Format the conversion directly
-                    conversion.format(str, taker, this)
+                    conversion.formatTo(this, str, taker)
             }
             append(format, textStart, format.length)
         }

@@ -24,7 +24,7 @@ internal class ConversionConstant(
     override val canTakeArguments: Boolean
         get() = false
 
-    override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
+    override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
     {
         to.append(replacement)
     }
@@ -55,14 +55,14 @@ internal abstract class ConversionExecutingNotNull(
 
     override fun checkFlag(str: FormatString, flag: Char): Boolean = flag in supportedFlags
 
-    override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
+    override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
     {
         val arg = taker.take()
         if(arg == null)
             to.append("null")
         else
-            format(str, arg, to)
+            formatTo(to, str, arg)
     }
 
-    abstract fun format(str: FormatString, arg: Any, to: Appendable)
+    abstract fun formatTo(to: Appendable, str: FormatString, arg: Any)
 }

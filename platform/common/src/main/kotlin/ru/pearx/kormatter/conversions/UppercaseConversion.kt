@@ -26,7 +26,7 @@ class UppercaseConversion(private val baseConversion: Conversion) : Conversion
     override val canTakeArguments: Boolean
         get() = baseConversion.canTakeArguments
 
-    override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable) = baseConversion.format(str, taker, ru.pearx.kormatter.conversions.UppercaseConversion.UppercaseAppendable(to))
+    override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker) = baseConversion.formatTo(ru.pearx.kormatter.conversions.UppercaseConversion.UppercaseAppendable(to), str, taker)
 
     override fun check(str: FormatString) = baseConversion.check(str)
 

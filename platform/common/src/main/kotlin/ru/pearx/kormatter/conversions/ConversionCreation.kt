@@ -23,7 +23,7 @@ inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: Pa
 {
     return object : ConversionExecuting(supportedFlags, widthAction, precisionAction)
     {
-        override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
+        override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
         {
             executor(str, taker.take(), to)
         }
@@ -34,7 +34,7 @@ inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: Pa
 {
     return object : ConversionExecuting(supportedFlags, widthAction, precisionAction)
     {
-        override fun format(str: FormatString, taker: ArgumentTaker, to: Appendable)
+        override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
         {
             to.append(executor(str, taker.take()))
         }
@@ -45,7 +45,7 @@ inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAct
 {
     return object : ConversionExecutingNotNull(supportedFlags, widthAction, precisionAction)
     {
-        override fun format(str: FormatString, arg: Any, to: Appendable)
+        override fun formatTo(to: Appendable, str: FormatString, arg: Any)
         {
             executor(str, arg, to)
         }
@@ -56,7 +56,7 @@ inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAct
 {
     return object : ConversionExecutingNotNull(supportedFlags, widthAction, precisionAction)
     {
-        override fun format(str: FormatString, arg: Any, to: Appendable)
+        override fun formatTo(to: Appendable, str: FormatString, arg: Any)
         {
             to.append(executor(str, arg))
         }
