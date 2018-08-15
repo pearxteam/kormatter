@@ -34,9 +34,12 @@ val DefaultFormatter = buildFormatter {
             }
         })
 
-        's'(conversion
-        { _, arg ->
-            arg.toString()
+        's'(conversion(supportedFlags = charArrayOf('#'))
+        { to, str, arg ->
+            if(arg is Formattable)
+                arg.formatTo(to, str)
+            else
+                to.append(arg.toString())
         })
 
         'h'(conversionNotNull

@@ -8,8 +8,11 @@
 package ru.pearx.kormatter.test
 
 import ru.pearx.kormatter.exceptions.IllegalConversionException
+import ru.pearx.kormatter.flags.FLAG_ALTERNATE_FORM
+import ru.pearx.kormatter.formatter.Formattable
 import ru.pearx.kormatter.formatter.format
 import ru.pearx.kormatter.utils.ConversionKey
+import ru.pearx.kormatter.utils.FormatString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -128,5 +131,23 @@ class FormatterTest
     {
         assertEquals("     Super", "%10.5s".format("Super String 123"))
         assertEquals("Super Stri", "%10.10s".format("Super String 123"))
+    }
+
+    class Customer(val name: String, val products: List<String>) : Formattable
+    {
+        override fun formatTo(to: Appendable, str: FormatString)
+        {
+            if(str.flags.contains(FLAG_ALTERNATE_FORM))
+                to.append("$name [x${products.size}]")
+            else
+                to.append("$name $products")
+        }
+    }
+
+    @Test
+    fun testFormattable()
+    {
+        assertEquals("Alex [Book, Keyboard, Toilet Paper]", "%s".format(Customer("Alex", listOf("Book", "Keyboard", "Toilet Paper"))))
+        assertEquals("Alex [x3]", "%#s".format(Customer("Alex", listOf("Book", "Keyboard", "Toilet Paper"))))
     }
 }

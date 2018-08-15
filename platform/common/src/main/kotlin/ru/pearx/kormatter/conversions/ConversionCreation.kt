@@ -19,13 +19,13 @@ fun conversion(replacement: String, widthAction: PartAction = PartAction.STANDAR
     return ConversionConstant(replacement, widthAction, precisionAction)
 }
 
-inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any?, to: Appendable) -> Unit) : Conversion
+inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (to: Appendable, str: FormatString, arg: Any?) -> Unit) : Conversion
 {
     return object : ConversionExecuting(supportedFlags, widthAction, precisionAction)
     {
         override fun formatTo(to: Appendable, str: FormatString, taker: ArgumentTaker)
         {
-            executor(str, taker.take(), to)
+            executor(to, str, taker.take())
         }
     }
 }
@@ -41,13 +41,13 @@ inline fun conversion(supportedFlags: CharArray = charArrayOf(), widthAction: Pa
     }
 }
 
-inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (str: FormatString, arg: Any, to: Appendable) -> Unit) : Conversion
+inline fun conversionNotNull(supportedFlags: CharArray = charArrayOf(), widthAction: PartAction = PartAction.STANDARD, precisionAction: PartAction = PartAction.STANDARD, crossinline executor: (to: Appendable, str: FormatString, arg: Any) -> Unit) : Conversion
 {
     return object : ConversionExecutingNotNull(supportedFlags, widthAction, precisionAction)
     {
         override fun formatTo(to: Appendable, str: FormatString, arg: Any)
         {
-            executor(str, arg, to)
+            executor(to, str, arg)
         }
     }
 }

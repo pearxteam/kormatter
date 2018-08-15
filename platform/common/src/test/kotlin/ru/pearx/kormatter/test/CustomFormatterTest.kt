@@ -29,7 +29,7 @@ class CustomFormatterTest
             takeFrom(DefaultFormatter)
             conversions {
                 'g'(conversion
-                { _, arg, to ->
+                { to, _, arg ->
                     var n = 0
                     for (ch in arg.toString())
                     {
