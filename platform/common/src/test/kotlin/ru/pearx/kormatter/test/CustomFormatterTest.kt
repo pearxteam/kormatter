@@ -7,11 +7,11 @@
 
 package ru.pearx.kormatter.test
 
+import ru.pearx.kormatter.DefaultFormatter
+import ru.pearx.kormatter.FlagMismatchException
+import ru.pearx.kormatter.buildFormatter
 import ru.pearx.kormatter.conversions.conversion
-import ru.pearx.kormatter.exceptions.FlagMismatchException
-import ru.pearx.kormatter.formatter.DefaultFormatter
-import ru.pearx.kormatter.formatter.builder.buildFormatter
-import ru.pearx.kormatter.formatter.format
+import ru.pearx.kormatter.format
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

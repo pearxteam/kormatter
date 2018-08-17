@@ -7,8 +7,8 @@
 
 package ru.pearx.kormatter.utils
 
-import ru.pearx.kormatter.exceptions.NoSuchArgumentException
-import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
+import ru.pearx.kormatter.FLAG_REUSE_ARGUMENT_INDEX
+import ru.pearx.kormatter.NoSuchArgumentException
 import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
 
 

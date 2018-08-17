@@ -7,12 +7,7 @@
 
 package ru.pearx.kormatter.test
 
-import ru.pearx.kormatter.exceptions.IllegalFormatArgumentException
-import ru.pearx.kormatter.exceptions.IllegalFormatCodePointException
-import ru.pearx.kormatter.exceptions.UnknownConversionException
-import ru.pearx.kormatter.flags.FLAG_ALTERNATE_FORM
-import ru.pearx.kormatter.formatter.Formattable
-import ru.pearx.kormatter.formatter.format
+import ru.pearx.kormatter.*
 import ru.pearx.kormatter.utils.ConversionKey
 import ru.pearx.kormatter.utils.FormatString
 import kotlin.test.Test
