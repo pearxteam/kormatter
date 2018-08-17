@@ -150,4 +150,13 @@ class FormatterTest
         assertEquals("Alex [Book, Keyboard, Toilet Paper]", "%s".format(Customer("Alex", listOf("Book", "Keyboard", "Toilet Paper"))))
         assertEquals("Alex [x3]", "%#s".format(Customer("Alex", listOf("Book", "Keyboard", "Toilet Paper"))))
     }
+
+    @Test
+    fun testCharacter()
+    {
+        assertEquals("f", "%c".format('f'))
+        assertEquals("{", "%c".format(123.toByte()))
+        assertEquals("⽤", "%c".format(12132.toShort()))
+        assertEquals("\uD83D\uDE0E", "%c".format(128526))
+    }
 }
