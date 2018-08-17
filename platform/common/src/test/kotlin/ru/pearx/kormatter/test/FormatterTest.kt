@@ -7,7 +7,7 @@
 
 package ru.pearx.kormatter.test
 
-import ru.pearx.kormatter.exceptions.IllegalConversionException
+import ru.pearx.kormatter.exceptions.UnknownConversionException
 import ru.pearx.kormatter.flags.FLAG_ALTERNATE_FORM
 import ru.pearx.kormatter.formatter.Formattable
 import ru.pearx.kormatter.formatter.format
@@ -107,9 +107,9 @@ class FormatterTest
     @Test
     fun testIllegalConversions()
     {
-        assertFailsWith<IllegalConversionException> { "Hello, %ы".format() }
-        assertFailsWith<IllegalConversionException> { "Tsss, %2$12p".format() }
-        assertFailsWith<IllegalConversionException> { "Tsss, %2$<12.420q".format() }
+        assertFailsWith<UnknownConversionException> { "Hello, %ы".format() }
+        assertFailsWith<UnknownConversionException> { "Tsss, %2$12p".format() }
+        assertFailsWith<UnknownConversionException> { "Tsss, %2$<12.420q".format() }
     }
 
     @Test

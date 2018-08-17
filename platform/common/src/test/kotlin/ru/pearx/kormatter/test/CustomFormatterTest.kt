@@ -8,7 +8,7 @@
 package ru.pearx.kormatter.test
 
 import ru.pearx.kormatter.conversions.conversion
-import ru.pearx.kormatter.exceptions.IllegalFlagsException
+import ru.pearx.kormatter.exceptions.FlagMismatchException
 import ru.pearx.kormatter.formatter.DefaultFormatter
 import ru.pearx.kormatter.formatter.builder.buildFormatter
 import ru.pearx.kormatter.formatter.format
@@ -60,9 +60,9 @@ class CustomFormatterTest
             }
         }
         assertEquals("Test", form.format("%s", "Test"))
-        assertFailsWith<IllegalFlagsException> { form.format("%!s", "Test") }
+        assertFailsWith<FlagMismatchException> { form.format("%!s", "Test") }
         assertEquals("TEATIME", form.format("%!q", "teaTIME"))
         assertEquals("teatime", form.format("%q", "TEAtime"))
-        assertFailsWith<IllegalFlagsException> { form.format("%#q", "Test") }
+        assertFailsWith<FlagMismatchException> { form.format("%#q", "Test") }
     }
 }

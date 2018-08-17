@@ -7,9 +7,9 @@
 
 package ru.pearx.kormatter.conversions
 
-import ru.pearx.kormatter.exceptions.IllegalFlagsException
-import ru.pearx.kormatter.exceptions.IllegalPrecisionException
-import ru.pearx.kormatter.exceptions.IllegalWidthException
+import ru.pearx.kormatter.exceptions.FlagMismatchException
+import ru.pearx.kormatter.exceptions.PrecisionMismatchException
+import ru.pearx.kormatter.exceptions.WidthMismatchException
 import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
 import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
 import ru.pearx.kormatter.utils.FormatString
@@ -24,9 +24,9 @@ interface ConversionChecking : Conversion
     override fun check(str: FormatString)
     {
         if(widthAction == PartAction.FORBIDDEN && str.width != null)
-            throw IllegalWidthException(str)
+            throw WidthMismatchException(str)
         if(precisionAction == PartAction.FORBIDDEN && str.precision != null)
-            throw IllegalPrecisionException(str)
+            throw PrecisionMismatchException(str)
         for (flag in str.flags)
         {
             if (flag == FLAG_LEFT_JUSTIFIED && widthAction != PartAction.FORBIDDEN)
@@ -35,7 +35,7 @@ interface ConversionChecking : Conversion
                 continue
             if(checkFlag(str, flag))
                 continue
-            throw IllegalFlagsException(str, "The conversion doesn't support the '$flag' flag.")
+            throw FlagMismatchException(str, flag)
         }
     }
 

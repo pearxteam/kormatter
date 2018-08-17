@@ -20,6 +20,10 @@ import ru.pearx.kormatter.utils.internal.lineSeparator
  */
 val DefaultFormatter = buildFormatter {
     conversions {
+        /* Some notes for me:
+         * Deny precision for character, integral, date/time, percent, line separator, 'g' conversions
+         * Deny width for line separator conversion.
+         */
         '%'(conversion("%", precisionAction = PartAction.FORBIDDEN), false)
 
         'n'(conversion(lineSeparator, PartAction.FORBIDDEN, PartAction.FORBIDDEN), false)

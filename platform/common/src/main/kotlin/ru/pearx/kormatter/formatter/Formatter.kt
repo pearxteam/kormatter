@@ -7,7 +7,7 @@
 
 package ru.pearx.kormatter.formatter
 
-import ru.pearx.kormatter.exceptions.IllegalConversionException
+import ru.pearx.kormatter.exceptions.UnknownConversionException
 import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.ConversionMap
@@ -38,7 +38,7 @@ class Formatter internal constructor(val conversions: ConversionMap, val flags: 
                 textStart = str.endInclusive + 1
 
                 taker.formatString = str
-                val conversion = conversions[str.conversion] ?: throw IllegalConversionException(str)
+                val conversion = conversions[str.conversion] ?: throw UnknownConversionException(str)
                 conversion.check(str)
 
                 val fWidth = conversion.widthAction == PartAction.STANDARD && str.width != null

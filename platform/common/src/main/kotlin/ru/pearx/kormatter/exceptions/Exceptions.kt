@@ -17,66 +17,53 @@ import ru.pearx.kormatter.utils.FormatString
  */
 abstract class FormatStringException : RuntimeException
 {
-    protected abstract val localMessage: String
-    val formatString: FormatString
+    private val localMessage: String
+    private val formatString: FormatString
 
-    constructor(formatString: FormatString) : super()
+    constructor(formatString: FormatString, localMessage: String) : super()
     {
         this.formatString = formatString
+        this.localMessage = localMessage
     }
 
-    constructor(formatString: FormatString, cause: Throwable?) : super(cause)
+    constructor(formatString: FormatString, localMessage: String, cause: Throwable?) : super(cause)
     {
         this.formatString = formatString
+        this.localMessage = localMessage
     }
 
     override val message: String?
         get() = "$formatString: $localMessage"
 }
 
-open class IllegalPartException(formatString: FormatString, private val name: String) : FormatStringException(formatString)
+open class PartMismatchException(formatString: FormatString, name: String) : FormatStringException(formatString, "The format string shouldn't have the $name.")
+
+class PrecisionMismatchException(formatString: FormatString) : PartMismatchException(formatString, "precision")
+
+class WidthMismatchException(formatString: FormatString) : PartMismatchException(formatString, "width")
+
+class UnknownConversionException(formatString: FormatString) : FormatStringException(formatString, "Cannot find a conversion '${formatString.conversion}'.")
+
+class ConversionAlreadyExistsException(key: ConversionKey, existing: Conversion) : RuntimeException("The conversion '$key' already exists: $existing!")
+
+open class IllegalFormatArgumentException : FormatStringException
 {
-    override val localMessage: String
-        get()
-        {
-            return "The format string shouldn't have the $name."
-        }
+    constructor(formatString: FormatString, argument: Any?) : super(formatString, "'$argument' of type '${argument?.let {it::class} ?: "NULL"}' is not a valid argument for this conversion.")
+    constructor(formatString: FormatString, message: String) : super(formatString, message)
 }
-
-class IllegalPrecisionException(formatString: FormatString) : IllegalPartException(formatString, "precision")
-
-class IllegalWidthException(formatString: FormatString) : IllegalPartException(formatString, "width")
-
-class IllegalConversionException(formatString: FormatString) : FormatStringException(formatString)
-{
-    override val localMessage: String
-        get() = "Cannot find a conversion '${formatString.conversion}'."
-}
-
-class ConversionAlreadyExistsException(val key: ConversionKey, val existing: Conversion) : RuntimeException()
-{
-    override val message: String?
-        get() = "The conversion '$key' already exists: $existing!"
-}
-
-open class IllegalFormatArgumentException(
-        formatString: FormatString,
-        val argument: Any?,
-        override val localMessage: String = "'$argument' is not a valid argument for this conversion."
-) : FormatStringException(formatString)
 
 class IllegalFormatCodePointException(
         formatString: FormatString,
-        val codePoint: Int
-) : IllegalFormatArgumentException(formatString, "Illegal code point: $codePoint!")
+        codePoint: Int
+) : IllegalFormatArgumentException(formatString, "Illegal UTF-16 code point: ${codePoint.hashCode().toString(16)}!")
 
-open class IllegalFlagsException(
+class FlagMismatchException(
         formatString: FormatString,
-        override val localMessage: String
-) : FormatStringException(formatString)
+        flag: Char
+) : FormatStringException(formatString, "The '$flag' flag isn't an allowed flag for this conversion.")
 
 open class NoSuchArgumentException(
         formatString: FormatString,
-        override val localMessage: String,
+        message: String,
         cause: Throwable?
-) : FormatStringException(formatString, cause)
+) : FormatStringException(formatString, message, cause)
