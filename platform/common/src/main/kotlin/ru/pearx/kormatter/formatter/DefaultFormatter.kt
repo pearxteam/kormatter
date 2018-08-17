@@ -9,6 +9,7 @@ package ru.pearx.kormatter.formatter
 
 import ru.pearx.kormatter.conversions.conversion
 import ru.pearx.kormatter.conversions.conversionNotNull
+import ru.pearx.kormatter.exceptions.IllegalFormatArgumentException
 import ru.pearx.kormatter.exceptions.IllegalFormatCodePointException
 import ru.pearx.kormatter.flags.*
 import ru.pearx.kormatter.formatter.builder.buildFormatter
@@ -74,6 +75,7 @@ val DefaultFormatter = buildFormatter {
                     else
                         throw IllegalFormatCodePointException(str, i)
                 }
+                else -> throw IllegalFormatArgumentException(str, arg)
             }
         })
     }

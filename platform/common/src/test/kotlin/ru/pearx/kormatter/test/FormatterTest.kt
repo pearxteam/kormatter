@@ -7,6 +7,8 @@
 
 package ru.pearx.kormatter.test
 
+import ru.pearx.kormatter.exceptions.IllegalFormatArgumentException
+import ru.pearx.kormatter.exceptions.IllegalFormatCodePointException
 import ru.pearx.kormatter.exceptions.UnknownConversionException
 import ru.pearx.kormatter.flags.FLAG_ALTERNATE_FORM
 import ru.pearx.kormatter.formatter.Formattable
@@ -158,5 +160,7 @@ class FormatterTest
         assertEquals("{", "%c".format(123.toByte()))
         assertEquals("⽤", "%c".format(12132.toShort()))
         assertEquals("\uD83D\uDE0E", "%c".format(128526))
+        assertFailsWith<IllegalFormatArgumentException> { "%c".format(4234234234L) }
+        assertFailsWith<IllegalFormatCodePointException> { "%c".format(4234266) }
     }
 }
