@@ -5,10 +5,8 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.formatter
+package ru.pearx.kormatter
 
-import ru.pearx.kormatter.exceptions.UnknownConversionException
-import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
 import ru.pearx.kormatter.utils.ArgumentTaker
 import ru.pearx.kormatter.utils.ConversionMap
 import ru.pearx.kormatter.utils.FlagSet

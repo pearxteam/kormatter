@@ -5,7 +5,7 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.exceptions
+package ru.pearx.kormatter
 
 import ru.pearx.kormatter.conversions.Conversion
 import ru.pearx.kormatter.utils.ConversionKey

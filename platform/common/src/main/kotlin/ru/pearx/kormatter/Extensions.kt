@@ -5,15 +5,11 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.formatter
-
-import ru.pearx.kormatter.utils.FormatString
+package ru.pearx.kormatter
 
 
 /*
- * Created by mrAppleXZ on 14.08.18.
+ * Created by mrAppleXZ on 12.08.18.
  */
-interface Formattable
-{
-    fun formatTo(to: Appendable, str: FormatString)
-}
+fun Formatter.format(str: String, vararg args: Any?) = formatTo(StringBuilder(), str, args).toString()
+fun String.format(vararg args: Any?) = DefaultFormatter.format(this, *args)

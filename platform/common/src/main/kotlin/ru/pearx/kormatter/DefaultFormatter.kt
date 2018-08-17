@@ -5,14 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.formatter
+package ru.pearx.kormatter
 
 import ru.pearx.kormatter.conversions.conversion
 import ru.pearx.kormatter.conversions.conversionNotNull
-import ru.pearx.kormatter.exceptions.IllegalFormatArgumentException
-import ru.pearx.kormatter.exceptions.IllegalFormatCodePointException
-import ru.pearx.kormatter.flags.*
-import ru.pearx.kormatter.formatter.builder.buildFormatter
 import ru.pearx.kormatter.utils.PartAction
 import ru.pearx.kormatter.utils.internal.lineSeparator
 

@@ -5,14 +5,10 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package ru.pearx.kormatter.formatter.builder
+package ru.pearx.kormatter
 
 import ru.pearx.kormatter.conversions.Conversion
 import ru.pearx.kormatter.conversions.UppercaseConversion
-import ru.pearx.kormatter.exceptions.ConversionAlreadyExistsException
-import ru.pearx.kormatter.flags.FLAG_LEFT_JUSTIFIED
-import ru.pearx.kormatter.flags.FLAG_REUSE_ARGUMENT_INDEX
-import ru.pearx.kormatter.formatter.Formatter
 import ru.pearx.kormatter.utils.ConversionKey
 import ru.pearx.kormatter.utils.MutableConversionMap
 import ru.pearx.kormatter.utils.MutableFlagSet
