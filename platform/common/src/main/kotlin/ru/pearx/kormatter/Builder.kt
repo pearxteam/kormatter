@@ -24,7 +24,7 @@ annotation class FormatterDsl
 class FormatterBuilder internal constructor()
 {
     private val conversions: MutableConversionMap = hashMapOf()
-    private val flags: MutableFlagSet = hashSetOf(FLAG_REUSE_ARGUMENT_INDEX, FLAG_LEFT_JUSTIFIED)
+    private val flags: MutableFlagSet = hashSetOf(FLAG_REUSE_ARGUMENT, FLAG_LEFT_JUSTIFIED)
 
     fun takeFrom(formatter: Formatter)
     {

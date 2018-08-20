@@ -27,7 +27,7 @@ interface ConversionChecking : Conversion
         {
             if (flag == FLAG_LEFT_JUSTIFIED && widthAction != PartAction.FORBIDDEN)
                 continue
-            if (flag == FLAG_REUSE_ARGUMENT_INDEX && canTakeArguments)
+            if (flag == FLAG_REUSE_ARGUMENT && canTakeArguments)
                 continue
             if(checkFlag(str, flag))
                 continue

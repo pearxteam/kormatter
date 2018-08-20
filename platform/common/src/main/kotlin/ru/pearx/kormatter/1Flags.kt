@@ -12,8 +12,8 @@ package ru.pearx.kormatter
  * Created by mrAppleXZ on 06.08.18.
  */
 const val FLAG_LEFT_JUSTIFIED = '-'
-const val FLAG_REUSE_ARGUMENT_INDEX = '<'
-const val FLAG_ALTERNATE_FORM = '#'
+const val FLAG_REUSE_ARGUMENT = '<'
+const val FLAG_ALTERNATE = '#'
 const val FLAG_INCLUDE_SIGN = '+'
 const val FLAG_POSITIVE_LEADING_SPACE = ' '
 const val FLAG_ZERO_PADDED = '0'

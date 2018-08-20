@@ -7,7 +7,7 @@
 
 package ru.pearx.kormatter.utils
 
-import ru.pearx.kormatter.FLAG_REUSE_ARGUMENT_INDEX
+import ru.pearx.kormatter.FLAG_REUSE_ARGUMENT
 import ru.pearx.kormatter.NoSuchArgumentException
 import ru.pearx.kormatter.utils.internal.ArgumentIndexHolder
 
@@ -39,7 +39,7 @@ class ArgumentTaker internal constructor(
                 }
             }
             //reuse previous argument index
-            FLAG_REUSE_ARGUMENT_INDEX in formatString.flags ->
+            FLAG_REUSE_ARGUMENT in formatString.flags ->
             {
                 try
                 {

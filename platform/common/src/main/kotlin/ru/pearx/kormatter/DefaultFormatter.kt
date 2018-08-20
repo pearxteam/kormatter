@@ -76,7 +76,7 @@ val DefaultFormatter = buildFormatter {
         })
     }
     flags {
-        +FLAG_ALTERNATE_FORM
+        +FLAG_ALTERNATE
         +FLAG_INCLUDE_SIGN
         +FLAG_POSITIVE_LEADING_SPACE
         +FLAG_ZERO_PADDED

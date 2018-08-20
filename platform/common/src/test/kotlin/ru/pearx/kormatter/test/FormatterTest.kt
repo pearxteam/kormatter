@@ -134,7 +134,7 @@ class FormatterTest
     {
         override fun formatTo(to: Appendable, str: FormatString)
         {
-            if(str.flags.contains(FLAG_ALTERNATE_FORM))
+            if(str.flags.contains(FLAG_ALTERNATE))
                 to.append("$name [x${products.size}]")
             else
                 to.append("$name $products")
